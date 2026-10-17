@@ -6,9 +6,10 @@ import './home.css';
 const PLACEHOLDERS = [
   { id: 'about', label: '// 01 — About' },             
   { id: 'domains-preview', label: '// 02 — Domains' },  
-  { id: 'events-preview', label: '// 03 — Upcoming events' },  
-  { id: 'sponsors-strip', label: '// 04 — Sponsors' },  
-  { id: 'final-cta', label: '// 05 — Join us' },      
+  { id: 'flagship-events', label: '// 03 — Flagship events' },
+  { id: 'sponsors-strip', label: '// 04 — Sponsors' },
+  { id: 'community', label: '// 05 — Our community' },
+  { id: 'final-cta', label: '// 06 — Join us' },
 ];
 
 export default function Home() {

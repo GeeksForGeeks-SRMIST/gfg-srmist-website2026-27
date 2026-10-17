@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { cn } from '../../lib/utils';
 
-export default function Tabs({ items, value, onChange, label, idPrefix = 'tabs', className }) {
+export default function Tabs({ items, value, onChange, label, idPrefix = 'tabs', className, itemClassName }) {
   const refs = useRef({});
   const onKey = (e, i) => {
     let next = null;
@@ -34,6 +34,7 @@ export default function Tabs({ items, value, onChange, label, idPrefix = 'tabs',
               on
                 ? 'bg-green/22 text-white shadow-[inset_0_0_0_1px_rgba(70,196,107,.5),0_0_22px_-6px_rgba(70,196,107,.45)]'
                 : 'text-muted hover:text-text',
+              itemClassName,
             )}
           >
             {t.label}
