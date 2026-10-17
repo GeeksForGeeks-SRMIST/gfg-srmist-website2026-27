@@ -15,7 +15,11 @@ export const CONFIG = {
 
   email: 'gfg.srmist@gmail.com',
   phone: '8434561527',
-  socials: { instagram: '#', linkedin: '#', github: '#' },
+  socials: {
+    instagram: 'https://www.instagram.com/gfgsrmist/',
+    linkedin: 'https://www.linkedin.com/company/gfgsrmist/',
+    github: 'https://github.com/GeeksForGeeks-SRMIST',
+  },
 
   stats: [
     { value: 50, suffix: '+', label: 'Active Members' },
