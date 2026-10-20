@@ -10,7 +10,7 @@ export default function ComingSoon({ id, label, children }) {
           id={`${id}-title`}
           className="font-display text-[clamp(48px,9vw,128px)] font-light leading-[.85] tracking-[-.05em] lowercase text-transparent [-webkit-text-stroke:1px_rgba(217,220,218,.3)]"
         >
-          coming soon
+          Coming soon
         </h2>
         {children}
       </div>
