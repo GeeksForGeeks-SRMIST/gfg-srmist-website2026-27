@@ -53,6 +53,29 @@ function DomainCard({ d, index, canTilt }) {
       </div>
       <h2 className="mt-7 font-display text-[22px] font-semibold leading-tight tracking-[-.02em]">{d.name}</h2>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">{d.description}</p>
+            {d.points?.length > 0 && (
+        <ul className="mt-5 space-y-2 text-sm leading-relaxed text-muted">
+          {d.points.map((p) => (
+            <li key={p} className="flex gap-2">
+              <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-green-bright" />
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {d.skills?.length > 0 && (
+        <div className="mt-5">
+          <p className="font-mono text-xs tracking-[.12em] text-muted">// SKILLS</p>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {d.skills.map((s) => (
+              <li key={s} className="rounded-full border border-green-bright/35 px-3 py-1 text-xs text-green-bright">{s}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {d.lead && (
+        <p className="mt-auto pt-5 text-sm text-muted">Led by <span className="font-medium">{d.lead}</span></p>
+      )}
     </GlassCard>
   );
 }
