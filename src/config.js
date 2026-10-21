@@ -27,16 +27,16 @@ export const CONFIG = {
   ],
 
   nextEvent: {
-    title: 'Ideathon',
+    title: 'Idea Quest',
     date: 'Nov 2026',
-    venue: 'Main Auditorium',
-    blurb: '24-hour hackathon. Registrations are open — grab your spot.',
-    image: 'assets/events/next.jpg',
+    venue: '',
+    blurb: 'Our Flagship Ideathon. Coming Soon',
+    image: '/assets/events/idea-quest.webp',
     link: '/events',
-    registerUrl: '#',
+    registerUrl: 'https://www.instagram.com/gfgsrmist/',
   },
 
-  upcomingTicker: ['Java verse', 'Ideathon', 'Ignisia'],
+  upcomingTicker: ['Idea Quest'],
 };
 
 export const NAV_LINKS = [
