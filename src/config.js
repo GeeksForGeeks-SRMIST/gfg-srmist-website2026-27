@@ -43,7 +43,6 @@ export const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'Events', to: '/events' },
   { label: 'Team', to: '/team' },
-  { label: 'Community', to: '/community' },
   { label: 'Domains', to: '/domains' },
   { label: 'Sponsors', to: '/sponsors' },
   { label: 'Gallery', to: '/gallery' },

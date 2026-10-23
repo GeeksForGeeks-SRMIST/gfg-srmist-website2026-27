@@ -50,7 +50,7 @@ export default function SponsorsStrip() {
             All sponsors <ArrowUpRight aria-hidden="true" className="size-4" />
           </a>
         </Reveal>
-
+        <Reveal>
         {SPONSORS.length ? (
           <ul className="mt-8 flex flex-wrap items-center justify-center gap-3 md:mt-10 md:gap-4 duration-800 ease-out-expo">
             {SPONSORS.map((sponsor, index) => (
@@ -62,6 +62,7 @@ export default function SponsorsStrip() {
             Sponsor announcements coming soon.
           </p>
         )}
+        </Reveal>
       </div>
     </section>
   );

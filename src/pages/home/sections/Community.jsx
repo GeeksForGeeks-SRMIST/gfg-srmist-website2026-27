@@ -53,7 +53,7 @@ export default function Community() {
                 A place to learn, create, and find your people.
                 <span className="mt-1 block font-mono text-[10px] tracking-[.1em] text-muted/70 uppercase">
                   GeeksforGeeks Student Chapter · SRMIST
-                </span>
+                </span> 
               </p>
             </Reveal>
 
@@ -63,17 +63,16 @@ export default function Community() {
                 id="community-title"
                 className="relative z-10 flex flex-wrap items-center justify-center gap-x-[.16em] text-center font-display text-[clamp(48px,11.5vw,148px)] font-bold uppercase leading-[.85] tracking-[-.075em]"
               >
-                <div className="flex flex-col items-center justify-center gap-2 border-green-bright/40 bg-green-bright/[.07] md:col-span-2  rounded-3xl py-4 px-16 border-2">
-                   <h1 className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-display-light">Better</h1>
-                <h1 className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-green-bright ">Together.</h1>
-                </div>
-               
+                <Reveal className="flex flex-col items-center justify-center gap-2 border-green-bright/40 bg-green-bright/[.07] md:col-span-2  rounded-3xl py-4 px-16 border-2">
+                   <span className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-display-light">Better</span>
+                    <span className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-green-bright ">Together</span>
+                </Reveal>
               </Title>
             </div>
 
             <div className="grid gap-8 border-t border-line/70 py-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:py-8">
               <Reveal>
-                <SectionLabel>// Our community</SectionLabel>
+                <SectionLabel>Our community</SectionLabel>
                 <p className="mt-3 max-w-[470px] text-sm leading-relaxed text-muted">
                   {CONFIG.description} Find your people, sharpen your skills, and turn ideas into things that work.
                 </p>
@@ -108,7 +107,7 @@ export default function Community() {
         <div id="community-voices" className="scroll-mt-[calc(var(--nav-h)+16px)] border-t border-line pt-10 md:pt-14">
           <Reveal className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <SectionLabel>// Made of many voices</SectionLabel>
+              <SectionLabel>Made of many voices</SectionLabel>
               <h2 className="mt-3 font-display text-[clamp(34px,5vw,60px)] font-light leading-[.95] tracking-[-.05em] text-display-light">
                 Learn from each other.
               </h2>
@@ -128,7 +127,7 @@ export default function Community() {
                   className={`flex min-h-48 flex-col justify-between gap-8 rounded-card border p-5 transition-colors duration-300 sm:p-7 ${
                     index === 0
                       ? 'border-green-bright/40 bg-green-bright/[.07] md:col-span-2'
-                      : 'border-line bg-surface/60 hover:border-green-bright/35'
+                      : 'border-line bg-surface/60 hover:border-green-bright/40 md:col-span-2'
                   }`}
                 >
                   <p className="max-w-[850px] font-display text-[clamp(21px,3vw,34px)] font-light leading-snug tracking-[-.025em] text-display-light">
