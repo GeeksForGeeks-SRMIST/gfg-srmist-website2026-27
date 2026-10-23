@@ -7,7 +7,8 @@ import Domains from './pages/domains/Domains';
 import Sponsors from './pages/sponsors/Sponsors';
 import Gallery from './pages/gallery/Gallery';
 import NotFound from './pages/NotFound';
-
+import SponsorsStrip from './pages/home/sections/SponsorsStrip';
+import Community from './pages/home/sections/Community';
 export default function App() {
   return (
     <Routes>
@@ -17,6 +18,8 @@ export default function App() {
         <Route path="team" element={<Team />} />
         <Route path="domains" element={<Domains />} />
         <Route path="sponsors" element={<Sponsors />} />
+         <Route path="sponsorsStrip" element={<SponsorsStrip />} />
+        <Route path="community" element={<Community />} /> 
         <Route path="gallery" element={<Gallery />} />
         <Route path="*" element={<NotFound />} />
       </Route>

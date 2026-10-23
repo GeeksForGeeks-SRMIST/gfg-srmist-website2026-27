@@ -17,7 +17,7 @@ export default function Home() {
       <DomainsPreview />
       <FlagshipEvents />
       <SponsorsStrip />
-      <Community />
+       <Community /> 
       <JoinCTA />
     </>
   );
