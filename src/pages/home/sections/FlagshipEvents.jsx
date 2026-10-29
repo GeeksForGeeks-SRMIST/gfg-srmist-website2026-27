@@ -10,25 +10,25 @@ import {
 
 const FLAGSHIP_EVENTS = [
   {
-    title: 'Ideathon',
+    title: 'Idea Quest',
     description:
-      'Our flagship 24-hour hackathon. Form a team, choose a track, and turn an idea into something real.',
-    image: 'assets/events/ideathon.jpg',
-    imageAlt: 'Ideathon event',
+      'Our flagship ideathon. Form a team of up to four, pick a track and turn an idea into something real, with mentors by your side.',
+    image: 'assets/events/idea-quest.webp',
+    imageAlt: 'Idea Quest poster',
   },
   {
     title: 'Ignisia',
     description:
       'Discover the event, meet the community, and explore what is happening at GFG SRMIST.',
-    image: '',
-    imageAlt: 'Ignisia event poster',
+    image: 'assets/events/ignisia-25.webp',
+    imageAlt: 'Ignisia poster',
   },
   {
-    title: 'Java verse',
+    title: 'Java Verse',
     description:
       'Explore Java, strengthen your programming skills, and connect with fellow developers.',
-    image: '',
-    imageAlt: 'Java verse event poster',
+    image: 'assets/events/java-verse.webp',
+    imageAlt: 'Java Verse poster',
   },
 ];
 
@@ -73,7 +73,7 @@ export default function FlagshipEvents() {
                 src={event.image}
                 alt={event.imageAlt}
                 label="Event poster coming soon"
-                className="aspect-[16/10]"
+                className="aspect-[4/5]"
               />
 
               <div className="flex min-h-56 flex-col p-5 md:p-6">

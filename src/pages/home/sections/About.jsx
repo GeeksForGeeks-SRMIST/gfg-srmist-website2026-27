@@ -1,4 +1,5 @@
 import { ArrowUpRight, Code2, Users, Lightbulb } from 'lucide-react';
+import { Link } from 'react-router';
 import {
   GlassCard,
   SectionLabel,
@@ -54,13 +55,13 @@ export default function About() {
               into meaningful work.
             </p>
 
-            <a
-              href="/team"
+            <Link
+              to="/team"
               className="mt-7 inline-flex min-h-11 items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.12em] text-green-bright transition-colors hover:text-white"
             >
               Meet the community
               <ArrowUpRight size={16} aria-hidden="true" />
-            </a>
+            </Link>
           </div>
 
           <div className="grid gap-4">
