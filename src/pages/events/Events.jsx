@@ -19,7 +19,7 @@ function UpcomingCard({ ev }) {
       </div>
       <div className="flex flex-col items-start px-2 pb-2.5 pt-4 md:py-4 md:pl-0 md:pr-4">
         <p className="font-mono text-[13px] font-medium leading-none tracking-[.12em] uppercase text-green-bright">
-          <time dateTime={ev.date}>{formatDate(ev.date)}</time>
+          {ev.date ? <time dateTime={ev.date}>{formatDate(ev.date)}</time> : 'Dates to be announced'}
           {ev.time && <> <span aria-hidden="true">·</span> {ev.time}</>}
         </p>
         <h2 className="mt-4.5 font-display text-[clamp(34px,4.4vw,60px)] font-light leading-[.95] tracking-[-.045em] text-display-light">{ev.title}</h2>
@@ -29,7 +29,7 @@ function UpcomingCard({ ev }) {
             {ev.venue}
           </p>
         )}
-        <p className="mt-3.5 max-w-[560px] text-muted">{ev.description}</p>
+        <p className="mt-3.5 max-w-[560px] whitespace-pre-line text-muted">{ev.description}</p>
         <div className="mt-auto pt-7">
           <Button href={ev.registerUrl || '#'}>
             Register <ArrowUpRight aria-hidden="true" />
