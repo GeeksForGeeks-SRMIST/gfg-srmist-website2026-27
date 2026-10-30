@@ -44,11 +44,11 @@ const Role = ({ children }) => (
 
 const bracket = 'absolute size-4 border-green-bright/70 transition-all duration-500 group-hover/card:size-5 group-hover/card:border-green-bright';
 
-// Front: full-bleed colour photo, HUD corner brackets, jersey number, name + role over a gradient
+// Front: full-bleed photo with a soft green colour grade, HUD corner brackets, jersey number, name + role over a gradient
 function CardFront({ person, index }) {
   const [failed, setFailed] = useState(false);
   return (
-    <div className="relative aspect-[3/4] overflow-hidden rounded-card border border-white/10 bg-bg-2 backface-hidden transition-colors duration-500 group-hover/card:border-green-bright/60">
+    <div className="relative isolate aspect-[3/4] overflow-hidden rounded-card border border-green-bright/20 bg-bg-2 shadow-[0_18px_40px_-24px_rgba(70,196,107,.45)] backface-hidden transition-colors duration-500 group-hover/card:border-green-bright/60">
       {person.photo && !failed ? (
         <img
           src={asset(person.photo)}
@@ -58,14 +58,19 @@ function CardFront({ person, index }) {
           width="480"
           height="640"
           onError={() => setFailed(true)}
-          className="absolute inset-0 size-full object-cover object-top transition-transform duration-700 ease-out-expo group-hover/card:scale-[1.06]"
+          className="absolute inset-0 size-full object-cover object-top saturate-[.95] contrast-[1.03] transition-transform duration-700 ease-out-expo group-hover/card:scale-[1.06]"
         />
       ) : (
         <div role="img" aria-label={`${person.name} (photo coming soon)`} className="absolute inset-0 grid place-items-center bg-[radial-gradient(70%_60%_at_30%_20%,rgba(70,196,107,.16),transparent_70%),repeating-linear-gradient(135deg,rgba(255,255,255,.03)_0_1px,transparent_1px_12px)] pb-12">
           <span aria-hidden="true" className="font-display text-[clamp(40px,4.5vw,56px)] font-light tracking-[-.04em] text-muted">{initials(person.name)}</span>
         </div>
       )}
-      <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-black from-5% via-black/35 via-40% to-transparent to-70%" />
+      {/* Colour grade: the face area stays natural; the background and edges take a GfG-green cast and darken,
+          so bright or busy backgrounds blend into the page. Then a corner glow and a fade at the bottom. */}
+      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(75%_55%_at_50%_36%,transparent_50%,#46C46B_100%)] opacity-25 mix-blend-color" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_36%,transparent_60%,rgba(20,60,34,.2)_100%)] mix-blend-multiply" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(120%_70%_at_0%_0%,rgba(70,196,107,.22),transparent_55%)] mix-blend-soft-light" />
+      <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-[#04100a]/85 from-5% via-[#04100a]/20 via-30% to-transparent to-55%" />
 
       <span aria-hidden="true" className={`${bracket} left-2.5 top-2.5 rounded-tl-[3px] border-l-2 border-t-2`} />
       <span aria-hidden="true" className={`${bracket} bottom-2.5 right-2.5 rounded-br-[3px] border-b-2 border-r-2`} />
@@ -98,7 +103,7 @@ function CardBack({ person }) {
       )}
       <div aria-hidden="true" className="flex items-center gap-2.5 border-t border-line pt-3">
         {person.photo ? (
-          <img src={asset(person.photo)} alt="" loading="lazy" decoding="async" width="36" height="36" className="size-9 shrink-0 rounded-full object-cover object-top ring-2 ring-green-bright/60 ring-offset-2 ring-offset-bg-2" />
+          <img src={asset(person.photo)} alt="" loading="lazy" decoding="async" width="36" height="36" className="size-9 shrink-0 rounded-full object-cover object-top saturate-[.85] ring-2 ring-green-bright/60 ring-offset-2 ring-offset-bg-2" />
         ) : (
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-green/20 font-display text-xs text-green-bright ring-2 ring-green-bright/60">{initials(person.name)}</span>
         )}
