@@ -1,5 +1,4 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
-import { useLocation } from 'react-router';
 import { CONFIG } from '../../../config';
 import { SocialIcon } from '../../../components/ui/Social';
 import { SectionLabel } from '../../../components/ui/primitives';
@@ -15,9 +14,6 @@ const SOCIALS = [
 ];
 
 export default function Community() {
-  const { pathname } = useLocation();
-  const Title = pathname === '/community' ? 'h1' : 'h2';
-
   return (
     <section
       id="community"
@@ -37,7 +33,7 @@ export default function Community() {
       <div aria-hidden="true" className="pointer-events-none absolute right-[8%] top-[18%] -z-10 size-[360px] rounded-full bg-green-bright/10 blur-[130px]" />
 
       <div className="container-site">
-        <div className="flex min-h-[min(820px,calc(100svh-var(--nav-h)))] flex-col border-x border-line/70 pt-[var(--nav-h)]">
+        <div className="flex flex-col border-x border-line/70">
           <Reveal className="grid min-h-12 grid-cols-2 items-center border-b border-line/70 px-4 font-mono text-[9px] tracking-[.14em] text-muted uppercase sm:grid-cols-3 sm:px-6">
             <span className="inline-flex items-center gap-2">
               <span aria-hidden="true" className="size-1.5 rounded-full bg-neon shadow-[0_0_8px_var(--neon)]" />
@@ -59,15 +55,15 @@ export default function Community() {
 
             <div className="relative flex min-h-[260px] items-center justify-center py-12">
               <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-line/70" />
-              <Title
+              <h2
                 id="community-title"
                 className="relative z-10 flex flex-wrap items-center justify-center gap-x-[.16em] text-center font-display text-[clamp(48px,11.5vw,148px)] font-bold uppercase leading-[.85] tracking-[-.075em]"
               >
-                <Reveal className="flex flex-col items-center justify-center gap-2 border-green-bright/40 bg-green-bright/[.07] md:col-span-2  rounded-3xl py-4 px-16 border-2">
+                <Reveal as="span" className="flex flex-col items-center justify-center gap-2 rounded-3xl border-2 border-green-bright/40 bg-green-bright/[.07] px-8 py-4 sm:px-16">
                    <span className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-display-light">Better</span>
                     <span className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-green-bright ">Together</span>
                 </Reveal>
-              </Title>
+              </h2>
             </div>
 
             <div className="grid gap-8 border-t border-line/70 py-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:py-8">
@@ -148,7 +144,7 @@ export default function Community() {
         <Reveal className="mt-10 flex flex-wrap items-center justify-between gap-5 border-t border-line pt-7 md:mt-14">
           <div>
             <SectionLabel>// Stay in the loop</SectionLabel>
-            <p className="m-3 font-display text-2xl font-light tracking-[-.025em] text-display-light">
+            <p className="mt-3 font-display text-2xl font-light tracking-[-.025em] text-display-light">
               Follow what we’re building.
             </p>
           </div>
