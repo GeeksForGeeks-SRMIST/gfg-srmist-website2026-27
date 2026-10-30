@@ -22,7 +22,6 @@ function Photo({ person, large }) {
     <div
       className={cn(
         'relative aspect-square overflow-hidden rounded-[10px] bg-bg-2',
-        'before:absolute before:inset-0 before:z-[1] before:backdrop-grayscale before:transition-opacity before:duration-500 group-hover:before:opacity-0',
         'after:absolute after:inset-0 after:z-[2] after:rounded-[inherit] after:opacity-0 after:transition-opacity after:duration-400',
         'after:shadow-[inset_0_0_0_2px_var(--green-bright),inset_0_0_24px_-6px_rgba(70,196,107,.45)] group-hover:after:opacity-100',
         large && 'max-w-[320px] md:max-w-none',
@@ -45,7 +44,7 @@ const Role = ({ children }) => (
 
 const bracket = 'absolute size-4 border-green-bright/70 transition-all duration-500 group-hover/card:size-5 group-hover/card:border-green-bright';
 
-// Front: full-bleed photo (black & white until hover), HUD corner brackets, jersey number, name + role over a gradient
+// Front: full-bleed colour photo, HUD corner brackets, jersey number, name + role over a gradient
 function CardFront({ person, index }) {
   const [failed, setFailed] = useState(false);
   return (
@@ -59,7 +58,7 @@ function CardFront({ person, index }) {
           width="480"
           height="640"
           onError={() => setFailed(true)}
-          className="absolute inset-0 size-full object-cover object-top grayscale transition-[transform,filter] duration-700 ease-out-expo group-hover/card:scale-[1.06] group-hover/card:grayscale-0"
+          className="absolute inset-0 size-full object-cover object-top transition-transform duration-700 ease-out-expo group-hover/card:scale-[1.06]"
         />
       ) : (
         <div role="img" aria-label={`${person.name} (photo coming soon)`} className="absolute inset-0 grid place-items-center bg-[radial-gradient(70%_60%_at_30%_20%,rgba(70,196,107,.16),transparent_70%),repeating-linear-gradient(135deg,rgba(255,255,255,.03)_0_1px,transparent_1px_12px)] pb-12">
@@ -99,7 +98,7 @@ function CardBack({ person }) {
       )}
       <div aria-hidden="true" className="flex items-center gap-2.5 border-t border-line pt-3">
         {person.photo ? (
-          <img src={asset(person.photo)} alt="" loading="lazy" decoding="async" width="36" height="36" className="size-9 shrink-0 rounded-full object-cover object-top grayscale ring-2 ring-green-bright/60 ring-offset-2 ring-offset-bg-2" />
+          <img src={asset(person.photo)} alt="" loading="lazy" decoding="async" width="36" height="36" className="size-9 shrink-0 rounded-full object-cover object-top ring-2 ring-green-bright/60 ring-offset-2 ring-offset-bg-2" />
         ) : (
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-green/20 font-display text-xs text-green-bright ring-2 ring-green-bright/60">{initials(person.name)}</span>
         )}
