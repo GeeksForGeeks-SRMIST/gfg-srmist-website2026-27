@@ -33,7 +33,7 @@ export const CONFIG = {
     blurb: 'Our Flagship Ideathon. Coming Soon',
     image: 'assets/events/idea-quest.webp',
     link: '/events',
-    registerUrl: 'https://www.instagram.com/gfgsrmist/',
+    registerUrl: '',
   },
 
   upcomingTicker: ['Idea Quest'],

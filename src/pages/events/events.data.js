@@ -7,7 +7,7 @@ export const UPCOMING_EVENTS = [
     description:
       'Idea Quest is the flagship ideathon hosted by GeeksforGeeks SRMIST, designed to bring together developers, designers, and creative problem solvers to tackle pressing real-world challenges.\n\nForm a team of up to four members, pick a domain track, and collaborate directly with expert mentors to refine your project concept. Whether you are building a functional prototype or preparing a compelling product pitch, Idea Quest provides the platform, guidance, and exposure you need to bring your vision to life.',
     image: 'assets/events/idea-quest.webp',
-    registerUrl: 'https://www.instagram.com/gfgsrmist/',
+    registerUrl: '',
   },
 ];
 

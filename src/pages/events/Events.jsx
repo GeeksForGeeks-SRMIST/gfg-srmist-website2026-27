@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { ArrowUpRight, CalendarX, MapPin } from 'lucide-react';
+import { CalendarX, MapPin } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import Tabs from '../../components/ui/Tabs';
 import Reveal from '../../components/ui/Reveal';
 import Media from '../../components/ui/Media';
-import Button from '../../components/ui/Button';
+import RegisterButton from '../../components/ui/RegisterButton';
 import { Badge, EmptyState, GlassCard } from '../../components/ui/primitives';
 import { formatDate } from '../../lib/utils';
 import { PAST_EVENTS, UPCOMING_EVENTS } from './events.data';
@@ -31,9 +31,7 @@ function UpcomingCard({ ev }) {
         )}
         <p className="mt-3.5 max-w-[560px] whitespace-pre-line text-muted">{ev.description}</p>
         <div className="mt-auto pt-7">
-          <Button href={ev.registerUrl || '#'}>
-            Register <ArrowUpRight aria-hidden="true" />
-          </Button>
+          <RegisterButton url={ev.registerUrl} />
         </div>
       </div>
     </GlassCard>
