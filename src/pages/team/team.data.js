@@ -105,6 +105,13 @@ export const ASSOCIATE_LEADS = [
     photo: 'assets/team/md-ashif-iqbal.webp',
   },
   {
+    name: 'Kriti Srivastav',
+    role: 'Associate Lead',
+    domain: 'technical',
+    quote: 'Social, curious, and always up for a new adventure to learn and grow.',
+    photo: 'assets/team/kriti-srivastav.webp',
+  },
+  {
     name: 'Gannavarapu Naga Sri Harshitha',
     role: 'Associate Lead',
     domain: 'events',
