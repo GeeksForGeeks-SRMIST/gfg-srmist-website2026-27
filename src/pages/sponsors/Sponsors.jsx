@@ -1,42 +1,34 @@
 import { useState } from 'react';
-import { Handshake, Plus } from 'lucide-react';
+import { Handshake } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import Reveal from '../../components/ui/Reveal';
 import Button from '../../components/ui/Button';
 import { EmptyState, SectionLabel } from '../../components/ui/primitives';
 import { useContact } from '../../components/contact/ContactProvider';
-import { asset, cn } from '../../lib/utils';
+import { asset } from '../../lib/utils';
 import { SPONSORS } from './sponsors.data';
 
-const TIERS = [
-  { id: 'title', label: 'Title Sponsor', note: 'Powering the whole season', grid: 'grid-cols-1', tile: 'min-h-[220px]' },
-  { id: 'gold', label: 'Gold', note: 'Headline partners', grid: 'grid-cols-[repeat(auto-fill,minmax(min(240px,100%),1fr))]', tile: 'min-h-[150px]' },
-  { id: 'silver', label: 'Silver', note: 'Event partners', grid: 'grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))]', tile: 'min-h-[118px]' },
-  { id: 'community', label: 'Community Partners', note: 'Friends of the chapter', grid: 'grid-cols-[repeat(auto-fill,minmax(min(150px,100%),1fr))]', tile: 'min-h-24' },
-];
+const tile =
+  'group relative block aspect-[3/2] w-full overflow-hidden rounded-card glass ' +
+  'transition-[transform,border-color,box-shadow] duration-300 ' +
+  'hover:-translate-y-1 hover:border-green-bright/60 hover:shadow-[0_14px_40px_-14px_rgba(70,196,107,.5)] ' +
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright';
 
-const tileBase =
-  'group relative grid w-full place-items-center overflow-hidden rounded-card p-5 glass text-muted ' +
-  'transition-[border-color,background-color,color] duration-350 hover:border-green-bright/55 hover:bg-surface-hover hover:text-text ' +
-  'before:pointer-events-none before:absolute before:inset-0 before:backdrop-grayscale before:transition-opacity before:duration-450 hover:before:opacity-0 ' +
-  'after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(80%_90%_at_50%_120%,rgba(70,196,107,.2),transparent_70%)] after:opacity-0 after:transition-opacity after:duration-450 hover:after:opacity-100';
-
-function Tile({ s, tier }) {
+function Tile({ s }) {
   const [failed, setFailed] = useState(false);
-  const isTitle = tier.id === 'title';
   return (
-    <a href={s.url || '#'} target="_blank" rel="noopener noreferrer" aria-label={`${s.name} (opens in a new tab)`} className={cn(tileBase, tier.tile)}>
+    <a href={s.url || '#'} target="_blank" rel="noopener noreferrer" aria-label={`${s.name} (opens in a new tab)`} className={tile}>
       {s.logo && !failed ? (
-        <img src={asset(s.logo)} alt={s.name} loading="lazy" decoding="async" onError={() => setFailed(true)} className={cn('max-w-[70%] object-contain', isTitle ? 'max-h-[110px]' : 'max-h-16')} />
+        <img
+          src={asset(s.logo)}
+          alt={s.name}
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
       ) : (
-        <span
-          className={cn(
-            'text-center',
-            isTitle
-              ? 'font-display text-[clamp(32px,4vw,52px)] font-light leading-none tracking-[-.04em] lowercase'
-              : 'font-ui text-[15px] font-bold leading-tight tracking-[.1em] uppercase',
-          )}
-        >
+        <span className="grid h-full place-items-center p-4 text-center font-ui text-[15px] font-bold leading-tight tracking-[.1em] text-muted uppercase">
           {s.name}
         </span>
       )}
@@ -56,39 +48,26 @@ export default function Sponsors() {
         subtitle="The partners who fuel our hackathons, workshops and late-night pizza. Thank you."
       />
 
-      <section aria-label="Sponsor tiers" className="pb-18 pt-20">
+      <section aria-label="Our sponsors" className="pb-18 pt-16">
         <div className="container-site">
           {!SPONSORS.length ? (
             <EmptyState icon={Handshake} title="Sponsor slots are open" hint="// be the first to back the chapter" />
           ) : (
-            TIERS.map((tier, i) => {
-              const list = SPONSORS.filter((s) => s.tier === tier.id);
-              return (
-                <Reveal key={tier.id} delay={i * 60} className="grid gap-5 border-t border-line py-8 last:border-b md:grid-cols-[240px_minmax(0,1fr)] md:gap-8 md:py-10">
-                  <div>
-                    <h2 className={cn('font-ui text-sm font-bold leading-tight tracking-[.14em] uppercase', tier.id === 'title' && 'text-green-bright')}>{tier.label}</h2>
-                    <p className="mt-2.5 font-mono text-xs leading-snug text-muted">// {tier.note} · {String(list.length).padStart(2, '0')}</p>
-                  </div>
-                  <ul className={cn('grid gap-3.5', tier.grid)}>
-                    {list.length ? (
-                      list.map((s, j) => <li key={`${s.name}-${j}`}><Tile s={s} tier={tier} /></li>)
-                    ) : (
-                      <li>
-                        <button
-                          type="button"
-                          aria-haspopup="dialog"
-                          onClick={(e) => openContact(e.currentTarget)}
-                          className={cn(tileBase, tier.tile, 'cursor-pointer gap-2 border-dashed font-mono text-xs font-medium tracking-[.12em] uppercase')}
-                        >
-                          <Plus className="size-5 text-green-bright" aria-hidden="true" />
-                          Your logo here
-                        </button>
-                      </li>
-                    )}
-                  </ul>
-                </Reveal>
-              );
-            })
+            <>
+              <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-line pb-6">
+                <SectionLabel>// Backed by {String(SPONSORS.length).padStart(2, '0')} partners</SectionLabel>
+                <p className="font-mono text-xs text-muted">// hover a logo to visit their site</p>
+              </Reveal>
+              <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {SPONSORS.map((s, i) => (
+                  <li key={`${s.name}-${i}`}>
+                    <Reveal delay={(i % 5) * 60}>
+                      <Tile s={s} />
+                    </Reveal>
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       </section>
