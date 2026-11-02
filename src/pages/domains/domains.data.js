@@ -10,14 +10,7 @@ export const DOMAINS = [
       'Review each other\'s code and share what you learn',
     ],
     skills: ['Web development', 'Git & GitHub', 'Problem solving', 'Teamwork'],
-    lead: 'Akshara Kumari, Md Nayaj Mondal',
-    associates: ['Md Ashif Iqbal', 'Himanshu Bagga', 'Sudhanshu'],
-    members: [
-      'Divyansh Sanadhya', 'Prajit Verma', 'Kriti Srivastav', 'Mohammed Fahad',
-      'Sharanya Sharma', 'Pratham Patel', 'Raushan Kumar', 'Rohan Hukam Chand',
-      'Yuvan Vishnu Pandi', 'Lalitha Sarvani Y.', 'Aditi Phulre', 'Priyanka Jana',
-      'Ayush Joshi',
-    ] },
+  },
   { name: 'Events', icon: CalendarCheck,
     description: 'Bring the community together through hackathons, workshops, and experiences worth showing up for.',
     points: [
@@ -27,15 +20,7 @@ export const DOMAINS = [
       'Work with the other domains to deliver each event',
     ],
     skills: ['Event planning', 'Communication', 'Team management', 'Public speaking'],
-    lead: 'Rithun Krishnaa, Jayna Shirlie, Raj Kumar Mehta',
-    associates: ['Harshitha', 'Babitha', 'Chinmay Nair', 'Chelsa'],
-    members: [
-      'Akshara P', 'Sumedha Singh', 'Apoorwa Kumar', 'Vedant Hada', 'Dipesh Jain',
-      'Harini B', 'Yatharth Garg', 'Jaya Satwika P.', 'Ananya Rai',
-      'Jagath Anirudh K.', 'Kambhampati Madhu', 'Radhika Anil Bajaj',
-      'Utkarsh Rana', 'Prathit Singh', 'Nallana Saahithi', 'Sai Siddharth V.',
-      'Aadya Vatsh', 'Srijani Ghosh',
-    ] },
+  },
   { name: 'Creatives', icon: PenTool,
     description: 'Give the club its voice and visual identity through design, content, photography, and storytelling.',
     points: [
@@ -45,11 +30,5 @@ export const DOMAINS = [
       'Keep the club\'s look and feel consistent',
     ],
     skills: ['Graphic design', 'Photography', 'Content writing', 'Video editing'],
-    lead: 'G.B. Yashavini, Vansh Agarwal',
-    associates: ['Sashank Peddada', 'Anandita C Iyer', 'T Nikitha KL'],
-    members: [
-      'Aryaman Dhiman', 'Sharvani Singh', 'Nivedita Prasad', 'M Padmeshwaraan',
-      'Pushkala Chowdary', 'Lakshya Sree Thota', 'Harshaa Vardhini R',
-      'Muthyala Venkata R.', 'Aryan Saini', 'Advaitha Lakshmi E.', 'Ishita Saini',
-    ] },
+  },
 ];
