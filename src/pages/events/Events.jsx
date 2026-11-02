@@ -14,7 +14,7 @@ function UpcomingCard({ ev }) {
   return (
     <GlassCard as="article" className="grid gap-2 p-3.5 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)] md:gap-10 md:p-5">
       <div className="relative overflow-hidden rounded-[10px]">
-        <Media src={ev.image} alt={`${ev.title} poster`} label="Poster coming soon" className="aspect-[16/10] md:aspect-[4/5] md:h-full" />
+        <Media src={ev.image} alt={`${ev.title} poster`} label="Poster coming soon" className="aspect-[2/3] md:h-full" />
         <Badge variant="upcoming" className="absolute left-3.5 top-3.5">Upcoming</Badge>
       </div>
       <div className="flex flex-col items-start px-2 pb-2.5 pt-4 md:py-4 md:pl-0 md:pr-4">

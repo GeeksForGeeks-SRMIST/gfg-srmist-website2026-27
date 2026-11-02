@@ -29,8 +29,8 @@ export const CONFIG = {
   nextEvent: {
     title: 'Idea Quest',
     date: 'Nov 2026',
-    venue: '',
-    blurb: 'Our Flagship Ideathon. Coming Soon',
+    venue: 'SRM KTR Campus',
+    blurb: '24-hour overnight hackathon for business & startup ideas, with Corporate Gurukul.',
     image: 'assets/events/idea-quest.webp',
     link: '/events',
     registerUrl: '',

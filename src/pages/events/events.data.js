@@ -3,9 +3,9 @@ export const UPCOMING_EVENTS = [
     title: 'Idea Quest',
     date: '',
     time: '',
-    venue: '',
+    venue: 'SRM KTR Campus',
     description:
-      'Idea Quest is the flagship ideathon hosted by GeeksforGeeks SRMIST, designed to bring together developers, designers, and creative problem solvers to tackle pressing real-world challenges.\n\nForm a team of up to four members, pick a domain track, and collaborate directly with expert mentors to refine your project concept. Whether you are building a functional prototype or preparing a compelling product pitch, Idea Quest provides the platform, guidance, and exposure you need to bring your vision to life.',
+      'A 24-hour overnight hackathon for business and startup ideas, presented by GeeksforGeeks SRMIST with Corporate Gurukul as our sponsor.\n\nForm a team, pick a problem worth solving and turn it into a startup or business idea you can pitch. Mentors on the floor all night, refreshments to keep you going, and prizes and recognition for the ideas that make an impact.',
     image: 'assets/events/idea-quest.webp',
     registerUrl: '',
   },
