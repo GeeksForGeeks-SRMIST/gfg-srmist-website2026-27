@@ -16,8 +16,13 @@ const tile =
 
 function Tile({ s }) {
   const [failed, setFailed] = useState(false);
+  // Sponsors without a confirmed website show as a plain tile instead of a link
+  const Wrap = s.url ? 'a' : 'div';
+  const linkProps = s.url
+    ? { href: s.url, target: '_blank', rel: 'noopener noreferrer', 'aria-label': `${s.name} (opens in a new tab)` }
+    : { role: 'img', 'aria-label': s.name };
   return (
-    <a href={s.url || '#'} target="_blank" rel="noopener noreferrer" aria-label={`${s.name} (opens in a new tab)`} className={tile}>
+    <Wrap {...linkProps} className={tile}>
       {s.logo && !failed ? (
         <img
           src={asset(s.logo)}
@@ -32,7 +37,7 @@ function Tile({ s }) {
           {s.name}
         </span>
       )}
-    </a>
+    </Wrap>
   );
 }
 
@@ -56,7 +61,7 @@ export default function Sponsors() {
             <>
               <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-line pb-6">
                 <SectionLabel>// Backed by {String(SPONSORS.length).padStart(2, '0')} partners</SectionLabel>
-                <p className="font-mono text-xs text-muted">// hover a logo to visit their site</p>
+                <p className="font-mono text-xs text-muted">// click a logo to visit their site</p>
               </Reveal>
               <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {SPONSORS.map((s, i) => (
