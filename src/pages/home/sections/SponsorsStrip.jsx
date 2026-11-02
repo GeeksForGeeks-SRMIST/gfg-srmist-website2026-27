@@ -10,7 +10,7 @@ function SponsorMark({ sponsor }) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <li className="grid min-h-20 min-w-36 place-items-center rounded-card border border-line bg-surface/50 px-6 py-4 text-muted transition-colors duration-300 hover:border-green-bright/40 hover:text-text">
+    <li className="grid aspect-[3/2] place-items-center overflow-hidden rounded-card border border-line bg-surface/50 text-muted transition-[border-color,translate] duration-300 hover:-translate-y-0.5 hover:border-green-bright/50 hover:text-text">
       {sponsor.logo && !failed ? (
         <img
           src={asset(sponsor.logo)}
@@ -18,16 +18,19 @@ function SponsorMark({ sponsor }) {
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
-          className="max-h-12 max-w-36 object-contain"
+          className="size-full object-cover"
         />
       ) : (
-        <span className="text-center font-ui text-sm font-bold leading-tight tracking-[.1em] uppercase">
+        <span className="px-3 text-center font-ui text-sm font-bold leading-tight tracking-[.1em] uppercase">
           {sponsor.name}
         </span>
       )}
     </li>
   );
 }
+
+// The Home page shows the first 10; the Sponsors page has all of them
+const PREVIEW = SPONSORS.slice(0, 10);
 
 export default function SponsorsStrip() {
   return (
@@ -52,8 +55,8 @@ export default function SponsorsStrip() {
         </Reveal>
         <Reveal>
         {SPONSORS.length ? (
-          <ul className="mt-8 flex flex-wrap items-center justify-center gap-3 md:mt-10 md:gap-4">
-            {SPONSORS.map((sponsor, index) => (
+          <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:mt-10 md:gap-4 lg:grid-cols-5">
+            {PREVIEW.map((sponsor, index) => (
               <SponsorMark key={`${sponsor.name}-${index}`} sponsor={sponsor} />
             ))}
           </ul>
