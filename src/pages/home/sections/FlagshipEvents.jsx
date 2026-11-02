@@ -12,7 +12,7 @@ const FLAGSHIP_EVENTS = [
   {
     title: 'Idea Quest',
     description:
-      'Our flagship ideathon. Form a team of up to four, pick a track and turn an idea into something real, with mentors by your side.',
+      'Our 24-hour overnight hackathon for business and startup ideas, sponsored by Corporate Gurukul.',
     image: 'assets/events/idea-quest.webp',
     imageAlt: 'Idea Quest poster',
   },
