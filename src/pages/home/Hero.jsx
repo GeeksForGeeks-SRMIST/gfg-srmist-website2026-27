@@ -262,6 +262,45 @@ export default function Hero() {
     };
     const onResize = () => { eyes = null; };
     const onLeave = () => { target.x = 0; target.y = 0; gazeTarget.x = 0; gazeTarget.y = 0; nearRobot = false; overPanel = false; request(); };
+
+    // Touch screens: while a finger is on the hero the head follows it, then it turns back to the front
+    // shortly after the finger lifts. Tapping the left / middle / right of the robot still opens its panels.
+    let touchTimer = 0;
+    let touching = false;
+    const onTouchDown = (e) => {
+      if (e.pointerType === 'mouse') return;
+      clearTimeout(touchTimer);
+      touching = true;
+      measureEyes();
+      hero?.setAttribute('data-tracking', '');
+      aimAt(e.clientX, e.clientY);
+      request();
+    };
+    const onTouchMove = (e) => {
+      if (!touching || e.pointerType === 'mouse') return;
+      aimAt(e.clientX, e.clientY);
+      request();
+    };
+    const onTouchUp = (e) => {
+      if (!touching || e.pointerType === 'mouse') return;
+      touching = false;
+      clearTimeout(touchTimer);
+      touchTimer = setTimeout(() => {
+        gazeTarget.x = 0;
+        gazeTarget.y = 0;
+        request();
+        // once the head is back in front, hand over to the tap-zone poses again
+        touchTimer = setTimeout(() => { if (!touching) hero?.removeAttribute('data-tracking'); }, 500);
+      }, 900);
+    };
+    const touchOff = () => {
+      clearTimeout(touchTimer);
+      touching = false;
+      hero?.removeEventListener('pointerdown', onTouchDown);
+      window.removeEventListener('pointermove', onTouchMove);
+      window.removeEventListener('pointerup', onTouchUp);
+      window.removeEventListener('pointercancel', onTouchUp);
+    };
     const reset = () => {
       target.x = target.y = cur.x = cur.y = 0;
       gazeTarget.x = gazeTarget.y = gaze.x = gaze.y = 0;
@@ -275,7 +314,7 @@ export default function Hero() {
     };
 
     // With a mouse the head follows the pointer at every width (narrow desktop windows included);
-    // touch screens use the tap zones. The parallax drift is only for the wide desktop layout.
+    // touch screens follow the finger while it's down, plus the tap zones. The parallax drift is only for the wide desktop layout.
     let mode = '';
     const setMode = () => {
       const track = finePointer.matches;
@@ -287,8 +326,15 @@ export default function Hero() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('mouseleave', onLeave);
+      touchOff();
       reset();
       parallax = wide;
+      if (!track) {
+        hero?.addEventListener('pointerdown', onTouchDown);
+        window.addEventListener('pointermove', onTouchMove, { passive: true });
+        window.addEventListener('pointerup', onTouchUp);
+        window.addEventListener('pointercancel', onTouchUp);
+      }
       if (!track && !wide) return;
       if (track) {
         window.addEventListener('pointermove', onPointer, { passive: true });
@@ -310,6 +356,7 @@ export default function Hero() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('mouseleave', onLeave);
+      touchOff();
       cancelAnimationFrame(raf);
     };
   }, [reduced, setLook]);

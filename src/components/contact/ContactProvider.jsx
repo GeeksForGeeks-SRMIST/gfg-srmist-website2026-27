@@ -25,7 +25,6 @@ function ContactForm({ onDone }) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-    if (data.get('website')) { form.reset(); onDone(); return; }  // honeypot filled in: a bot, drop it quietly
     if (CONFIG.contactSheetUrl) {
       setSending(true);
       try {
@@ -45,8 +44,6 @@ function ContactForm({ onDone }) {
   };
   return (
     <form onSubmit={onSubmit} className="mt-5 grid gap-3">
-      {/* hidden from people; bots that fill every field give themselves away */}
-      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] size-px opacity-0" />
       <label className="grid gap-1.5">
         <span className={fieldLabel}>Name</span>
         <input className={fieldInput} name="name" type="text" autoComplete="name" placeholder="Ada Lovelace" required />
