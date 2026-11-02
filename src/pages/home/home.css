@@ -974,7 +974,7 @@
   .hm-holo__panel--right { left: auto; right: 16px; }
 }
 
-/* ≤768: robot ~60vh centred, everything stacked + centred, next card hidden */
+/* ≤768: robot ~60vh centred, everything stacked + centred, a smaller next-event card on its own row above the stats */
 @media (max-width: 768px) {
   .hm-hero { --hm-robot-h: min(60vh, calc(100vw * 1.2)); --hm-fs: 13vw; }
   .hm-hero__dash { display: none; }          /* give the word the full width */
@@ -988,7 +988,11 @@
   }
   .hm-hero__intro { justify-items: center; }
   .hm-hero__cards { justify-content: center; }
-  .hm-hero__next { display: none; }
+  .hm-hero__next { flex-basis: 100%; justify-items: center; gap: 8px; }
+  .hm-next { width: 104px; height: 104px; }
+  .hm-next__arrow { width: 26px; height: 26px; }
+  .hm-next__arrow svg { width: 12px; height: 12px; }
+  .hm-next__title { font-size: 11.5px; }
   .hm-hero__bubble { left: 50%; top: 49%; transform: translate(-50%, 8px) scale(.94); transform-origin: 50% 0; border-radius: 12px; }
   .hm-hero__robot.is-talking .hm-hero__bubble { transform: translate(-50%, 0); }
   .hm-hero__bubble { display: none; }
