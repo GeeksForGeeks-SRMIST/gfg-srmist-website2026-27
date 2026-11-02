@@ -32,7 +32,7 @@ export const CONFIG = {
     venue: 'SRM KTR Campus',
     blurb: '24-hour overnight hackathon for business & startup ideas, with Corporate Gurukul.',
     image: 'assets/events/idea-quest.webp',
-    link: '/events',
+    link: '/events#idea-quest',
     registerUrl: '',
   },
 

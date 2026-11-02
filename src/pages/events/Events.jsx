@@ -10,9 +10,12 @@ import { Badge, EmptyState, GlassCard } from '../../components/ui/primitives';
 import { formatDate } from '../../lib/utils';
 import { PAST_EVENTS, UPCOMING_EVENTS } from './events.data';
 
+// "Idea Quest" -> "idea-quest", so /events#idea-quest jumps straight to that event
+const eventId = (title) => String(title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 function UpcomingCard({ ev }) {
   return (
-    <GlassCard as="article" className="grid gap-2 p-3.5 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)] md:gap-10 md:p-5">
+    <GlassCard as="article" id={eventId(ev.title)} className="grid scroll-mt-[calc(var(--nav-h)+24px)] gap-2 p-3.5 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)] md:gap-10 md:p-5">
       <div className="relative overflow-hidden rounded-[10px]">
         <Media src={ev.image} alt={`${ev.title} poster`} label="Poster coming soon" className="aspect-[2/3] md:h-full" />
         <Badge variant="upcoming" className="absolute left-3.5 top-3.5">Upcoming</Badge>
@@ -65,7 +68,15 @@ function PastCard({ ev }) {
 export default function Events() {
   const { hash } = useLocation();
   const [tab, setTab] = useState(hash === '#past' ? 'past' : 'upcoming');
-  useEffect(() => { if (hash === '#past') setTab('past'); }, [hash]);
+  useEffect(() => {
+    if (hash === '#past') { setTab('past'); return undefined; }
+    // A link like /events#idea-quest opens Upcoming and scrolls to that event's card
+    const el = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!el) return undefined;
+    setTab('upcoming');
+    const t = setTimeout(() => el.scrollIntoView({ block: 'start' }), 60);
+    return () => clearTimeout(t);
+  }, [hash]);
 
   return (
     <>
