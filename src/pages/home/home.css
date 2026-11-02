@@ -974,7 +974,7 @@
   .hm-holo__panel--right { left: auto; right: 16px; }
 }
 
-/* ≤768: robot ~60vh centred, everything stacked + centred, a smaller next-event card on its own row above the stats */
+/* ≤768: robot ~60vh centred, everything stacked + centred, a smaller next-event card beside the robot's chest (right side) */
 @media (max-width: 768px) {
   .hm-hero { --hm-robot-h: min(60vh, calc(100vw * 1.2)); --hm-fs: 13vw; }
   .hm-hero__dash { display: none; }          /* give the word the full width */
@@ -988,7 +988,16 @@
   }
   .hm-hero__intro { justify-items: center; }
   .hm-hero__cards { justify-content: center; }
-  .hm-hero__next { flex-basis: 100%; justify-items: center; gap: 8px; }
+  .hm-hero__next {
+    position: absolute;
+    z-index: 2;
+    /* the layout starts at the robot's feet; lift the card up to chest height, on the right of the robot */
+    top: calc(var(--hm-robot-h) * -.3 - 64px);
+    right: max(12px, calc(50% - var(--hm-robot-w) / 2 + 12px));
+    justify-items: end;
+    gap: 6px;
+  }
+  .hm-hero__next .hm-mini-label { font-size: 10px; }
   .hm-next { width: 104px; height: 104px; }
   .hm-next__arrow { width: 26px; height: 26px; }
   .hm-next__arrow svg { width: 12px; height: 12px; }
