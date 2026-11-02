@@ -1,0 +1,145 @@
+/* Gallery "photo room": filter pills, a two-ring 3D carousel you drag around, a flat grid fallback and a lightbox.
+   Panel size comes from --W / --H, set on the stage from its own size. */
+.pr-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pr-bar::-webkit-scrollbar { display: none; }
+.pr-pill {
+  flex: none;
+  padding: 14px 22px;
+  border: 1px solid #2a2f2c;
+  border-radius: 99px;
+  font: 500 13px/1 var(--font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #9aa19d;
+  transition: border-color .2s, color .2s, background-color .2s;
+}
+.pr-pill:hover { border-color: #4a524d; color: #f2f4f3; }
+.pr-pill[aria-pressed="true"] { border-color: var(--green-bright); color: #f2f4f3; background: #07170e; }
+.pr-view {
+  flex: none;
+  margin-left: auto;
+  padding: 14px 4px;
+  border-bottom: 1px solid transparent;
+  font: 500 13px/1 var(--font-mono);
+  color: #9aa19d;
+  transition: color .2s, border-color .2s;
+}
+.pr-view:hover { color: #f2f4f3; border-bottom-color: #4a524d; }
+.pr-pill:focus-visible, .pr-view:focus-visible { outline: 2px solid var(--green-bright); outline-offset: 3px; }
+
+.pr-stage {
+  position: relative;
+  height: clamp(430px, calc(100svh - 96px), 860px);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pr-stage:focus-visible { outline: 2px solid var(--green-bright); outline-offset: -2px; }
+.pr-stage.pr-drag { cursor: grabbing; }
+.pr-ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.pr-panel {
+  position: absolute;
+  width: var(--W);
+  height: var(--H);
+  margin: calc(var(--H) / -2) 0 0 calc(var(--W) / -2);
+  padding: 0;
+  border-radius: 4px;
+  will-change: transform;
+}
+.pr-panel:focus-visible { outline: 2px solid var(--green-bright); outline-offset: -4px; }
+.pr-panel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  pointer-events: none;
+}
+/* the walls fade into the dark at both edges */
+.pr-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #000 0, transparent 22%, transparent 78%, #000 100%);
+}
+.pr-veil { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity .22s; }
+.pr-veil--on { opacity: 1; }
+.pr-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  translate: -50% 0;
+  padding: 7px 14px;
+  border: 1px solid #2a2f2c;
+  border-radius: 99px;
+  background: #000;
+  font: 500 12px/1.3 var(--font-mono);
+  color: #f2f4f3;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity .5s;
+}
+.pr-hint--off { opacity: 0; }
+
+.pr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 12px;
+  padding-top: 8px;
+}
+.pr-grid button { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 4px; }
+.pr-grid img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.pr-grid button:hover img { transform: scale(1.04); }
+.pr-grid button:focus-visible { outline: 2px solid var(--green-bright); outline-offset: 3px; }
+
+.pr-lb {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .94);
+}
+.pr-lb img { display: block; max-width: min(1100px, 100%); max-height: 74vh; border-radius: 4px; object-fit: contain; }
+.pr-cap { margin: 14px 0 0; max-width: 60ch; text-align: center; font-size: 14px; color: #c9cfcb; }
+.pr-lbbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  font: 500 13px/1 var(--font-mono);
+  color: #9aa19d;
+}
+.pr-lbbar button {
+  padding: 10px 14px;
+  border: 1px solid #2a2f2c;
+  border-radius: 99px;
+  font: inherit;
+  color: #f2f4f3;
+  transition: border-color .2s;
+}
+.pr-lbbar button:hover { border-color: var(--green-bright); }
+.pr-lbbar button:focus-visible { outline: 2px solid var(--green-bright); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-grid img, .pr-veil, .pr-hint { transition: none; }
+}
+@media (max-width: 640px) {
+  .pr-stage { height: clamp(430px, calc(100svh - 96px), 540px); }
+  .pr-view { margin-left: 6px; }
+  .pr-pill { padding: 11px 16px; font-size: 12px; }
+}

@@ -1,0 +1,137 @@
+/* Domain "doors": arched photo frames on a shared baseline, the middle one taller.
+   Each door carries its accent in --a. */
+.dd-row {
+  --side: 440px;
+  --mid: 530px;
+  --faint: #2b302d;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 44px);
+}
+.dd-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--mid);
+  height: 1px;
+  background: var(--faint);
+}
+.dd-door {
+  display: block;
+  min-width: 0;
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+.dd-door:focus-visible { outline: 2px solid var(--a); outline-offset: 6px; }
+
+.dd-frame { height: var(--mid); display: flex; align-items: flex-end; justify-content: center; }
+.dd-arch {
+  position: relative;
+  width: calc(100% - 20px);
+  height: var(--side);
+  padding: 9px 9px 0;
+  border: 1px solid var(--faint);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  transition: border-color .3s;
+}
+.dd-door--tall .dd-arch { height: calc(var(--mid) - 2px); }
+.dd-photo { height: 100%; overflow: hidden; border-radius: 999px 999px 0 0; background: #111; }
+.dd-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--p, center);
+  transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .35s;
+}
+
+.dd-txt { padding-top: 28px; text-align: center; }
+.dd-name {
+  margin: 0;
+  font: 300 clamp(38px, 4.1vw, 58px)/1 var(--font-display);
+  letter-spacing: -.04em;
+  color: #f2f4f3;
+}
+.dd-tag { margin: 12px 0 0; font-size: 17px; letter-spacing: -.01em; color: #a3aaa6; }
+.dd-dirs {
+  display: flex;
+  justify-content: center;
+  gap: clamp(12px, 1.6vw, 22px);
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.dd-dirs li {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 96px;
+  min-height: calc(70px + 2.5em);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #f2f4f3;
+}
+.dd-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 10px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #171b19;
+  font-size: 15px;
+  color: #a3aaa6;
+}
+.dd-face img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.dd-more {
+  display: inline-block;
+  margin-top: 26px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--a);
+  font-size: 15px;
+  font-weight: 400;
+  color: #f2f4f3;
+}
+
+@media (hover: hover) {
+  .dd-row:hover .dd-door:not(:hover) .dd-photo img { filter: saturate(.25) brightness(.5); }
+  .dd-door:hover .dd-photo img { transform: scale(1.05); }
+  .dd-door:hover .dd-arch { border-color: var(--a); }
+}
+
+/* photos rise into their arches when the row scrolls into view */
+.dd-row.dd-js .dd-photo { clip-path: inset(100% 0 0 0); transition: clip-path 1s cubic-bezier(.2,.7,.2,1); }
+.dd-row.dd-js .dd-door:nth-child(1) .dd-photo { transition-delay: .15s; }
+.dd-row.dd-js .dd-door:nth-child(3) .dd-photo { transition-delay: .3s; }
+.dd-row.dd-in .dd-photo { clip-path: inset(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .dd-row.dd-js .dd-photo { clip-path: none; transition: none; }
+  .dd-photo img { transition: none; }
+}
+@media (max-width: 1100px) { .dd-tag { font-size: 16px; } }
+
+/* phones and tablets: a swipeable row of doors */
+@media (max-width: 1000px) {
+  .dd-row {
+    --side: 360px;
+    --mid: 410px;
+    display: flex;
+    gap: 16px;
+    margin-inline: calc(var(--gutter, 16px) * -1);
+    padding: 0 12vw 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .dd-row::-webkit-scrollbar { display: none; }
+  .dd-row::before { display: none; }
+  .dd-door { flex: 0 0 76vw; scroll-snap-align: center; }
+  .dd-frame { border-bottom: 1px solid var(--faint); }
+}

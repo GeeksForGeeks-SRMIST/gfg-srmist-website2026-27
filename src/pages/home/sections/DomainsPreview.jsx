@@ -1,24 +1,35 @@
-
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router';
 import { DOMAINS } from '../../domains/domains.data';
-import {
-  GlassCard,
-  SectionLabel,
-  SectionTitle,
-} from '../../../components/ui/primitives';
+import { SectionLabel, SectionTitle } from '../../../components/ui/primitives';
+import DomainPanels from './DomainPanels';
 
+// One photo panel per domain, in the same order as DOMAINS (Technical, Events, Creatives)
+const PANEL_PHOTOS = [
+  { text: 'Code it, break it, ship it.', src: 'assets/gallery/workshop-03.webp' },
+  { text: 'Hackathons, workshops, full houses.', src: 'assets/gallery/workshop-05.webp' },
+  { text: 'The club, in its own voice.', src: 'assets/gallery/fun-01.webp' },
+];
+const PANELS = DOMAINS.map((d, i) => ({ name: d.name, icon: d.icon, ...PANEL_PHOTOS[i] }));
+
+// Expanding photo panels on the left, text on the right.
+// The paragraph follows whichever domain panel is open.
 export default function DomainsPreview() {
+  const [top, setTop] = useState(0);
+  const domain = DOMAINS[top] ?? DOMAINS[0];
+
   return (
     <section
       id="domains-preview"
       aria-labelledby="domains-preview-title"
-      className="border-b border-line py-20 md:py-30"
+      className="border-b border-line py-16 md:py-20"
     >
       <div className="container-site">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <SectionLabel>// 02 — Domains</SectionLabel>
+        <SectionLabel>// 02 — Domains</SectionLabel>
+
+        <div className="mt-8 grid gap-10 md:mt-10 md:grid-cols-[1.15fr_0.85fr] md:items-center md:gap-16">
+          <div className="md:order-2">
             <SectionTitle
               id="domains-preview-title"
               className="max-w-3xl normal-case"
@@ -27,51 +38,27 @@ export default function DomainsPreview() {
               <br />
               domain.
             </SectionTitle>
+
+            <p
+              key={domain.name}
+              aria-live="polite"
+              className="mt-7 min-h-16 max-w-xl animate-[domain-in_.45s_ease-out] text-base leading-8 text-muted md:text-lg"
+            >
+              {domain.description}
+            </p>
+
+            <Link
+              to="/domains"
+              className="mt-7 inline-flex min-h-11 items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.12em] text-green-bright transition-colors hover:text-white"
+            >
+              View all domains
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </Link>
           </div>
 
-          <Link
-            to="/domains"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-green-bright/30 px-5 py-3 font-mono text-xs font-medium uppercase tracking-[0.1em] text-green-bright transition-colors hover:border-green-bright hover:bg-green/10"
-          >
-            View all domains
-            <ArrowUpRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-
-        <div className="mt-10 grid gap-4 md:mt-14 md:grid-cols-3">
-          {DOMAINS.map(({ name, icon: Icon, description }, index) => (
-            <Link
-              key={name}
-              to="/domains"
-              aria-label={`Explore the ${name} domain`}
-              className="block rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-bright"
-            >
-              <GlassCard className="flex min-h-64 flex-col p-6 md:p-7">
-                <div className="flex items-center justify-between">
-                  <div className="grid size-12 place-items-center rounded-xl border border-green-bright/20 bg-green/10 text-green-bright">
-                    <Icon size={23} aria-hidden="true" />
-                  </div>
-
-                  <span className="font-mono text-xs text-muted">
-                    0{index + 1}
-                  </span>
-                </div>
-
-                <h3 className="mt-8 font-display text-3xl normal-case text-display-light">
-                  {name}
-                </h3>
-
-                <p className="mt-3 flex-1 text-sm leading-7 text-muted">
-                  {description}
-                </p>
-
-                <div className="mt-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-green-bright">
-                  Explore domain
-                  <ArrowRight size={14} aria-hidden="true" />
-                </div>
-              </GlassCard>
-            </Link>
-          ))}
+          <div className="md:order-1">
+            <DomainPanels panels={PANELS} onChange={setTop} />
+          </div>
         </div>
       </div>
     </section>

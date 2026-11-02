@@ -4,7 +4,7 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       radius: ['card'],
-      shadow: ['glow', 'brutal', 'brutal-hover'],
+      shadow: ['glow'],
       font: ['display', 'ui', 'mono'],
       ease: ['smooth', 'out-expo'],
       animate: ['led', 'marquee', 'holo-in'],

@@ -1,10 +1,32 @@
+// Faculty, in this order. role = their role in the club, designation = their post at SRMIST
 export const FACULTY = [
   {
-    name: 'Dr. Faculty Name',
-    role: 'Faculty Coordinator',
-    department: 'Department of Computer Science & Engineering',
-    quote: 'Build in public, help each other and never stop being curious.',
-    photo: '',
+    name: 'Dr. M. Lakshmi',
+    role: 'Head of Department',
+    designation: 'Professor and Head',
+    department: 'Department of Networking and Communications',
+    photo: 'assets/team/m-lakshmi.webp',
+  },
+  {
+    name: 'Dr. Meenakshi K',
+    role: 'Faculty Convenor',
+    designation: 'Assistant Professor',
+    department: 'Department of Networking and Communications',
+    photo: 'assets/team/meenakshi-k.webp',
+  },
+  {
+    name: 'Dr. Saranya G',
+    role: 'Faculty Co-Convenor',
+    designation: 'Assistant Professor',
+    department: 'Department of Networking and Communications',
+    photo: 'assets/team/saranya-g.webp',
+  },
+  {
+    name: 'Dr. Safa M',
+    role: 'Faculty Co-Convenor',
+    designation: 'Associate Professor',
+    department: 'Department of Networking and Communications',
+    photo: 'assets/team/safa-m.webp',
   },
 ];
 

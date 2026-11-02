@@ -12,7 +12,7 @@ export default function JoinCTA() {
   const { openContact } = useContact();
 
   return (
-    <section id="final-cta" aria-labelledby="final-cta-title" className="border-b border-line py-20 md:py-28">
+    <section id="final-cta" aria-labelledby="final-cta-title" className="border-b border-line py-16 md:py-20">
       <div className="container-site">
         <Reveal className="relative overflow-hidden rounded-[28px] border border-green-bright/30 bg-surface bg-[radial-gradient(70%_120%_at_100%_50%,rgba(70,196,107,.18),transparent_70%)] px-6 py-12 sm:px-10 md:px-14 md:py-16">
           <SectionLabel>// 06 — Join us</SectionLabel>

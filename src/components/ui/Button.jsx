@@ -7,11 +7,13 @@ const base =
   'transition-[translate,box-shadow,border-color,background-color,color] duration-250 ease-smooth [&_svg]:size-4';
 
 const variants = {
+  // Rounded green pill-card with a soft glow, the same shape language as the cards and chat
   primary:
-    'rounded-[2px] bg-green text-white shadow-brutal hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-hover ' +
-    'active:translate-x-px active:translate-y-px motion-reduce:hover:translate-none',
+    'rounded-xl border-green-bright/40 bg-green text-white shadow-[0_10px_28px_-14px_rgba(70,196,107,.9)] ' +
+    'hover:-translate-y-0.5 hover:border-green-bright hover:bg-[#35a052] hover:shadow-[0_0_0_3px_rgba(70,196,107,.18),0_12px_30px_-10px_rgba(70,196,107,.85)] ' +
+    'active:translate-y-0 motion-reduce:hover:translate-none',
   ghost:
-    'rounded glass text-text hover:border-green-bright/70 hover:text-white ' +
+    'rounded-xl glass text-text hover:border-green-bright/70 hover:text-white ' +
     'hover:shadow-[0_0_0_1px_rgba(70,196,107,.25),0_0_24px_-4px_rgba(70,196,107,.45)]',
   text: 'px-1 text-text hover:text-green-bright',
 };

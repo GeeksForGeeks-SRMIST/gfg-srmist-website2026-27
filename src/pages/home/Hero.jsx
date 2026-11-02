@@ -59,6 +59,7 @@ export default function Hero() {
   const lookRef = useRef(null);
   const hideTimer = useRef(0);
   const lastPointer = useRef('mouse');
+  const trackingRef = useRef(false);   // any mouse (at any width): panels follow the robot's gaze instead of hover zones
 
   /* 1. Start the intro once fonts are ready (so the headline doesn't swap mid-animation) */
   useEffect(() => {
@@ -152,36 +153,103 @@ export default function Hero() {
     const cards = [nextRef.current, statsRef.current].filter(Boolean);
     const target = { x: 0, y: 0 };
     const cur = { x: 0, y: 0 };
+    // Gaze: -1..1 on each axis, worked out from the angle between the robot's eyes and the pointer
+    const gazeTarget = { x: 0, y: 0 };
+    const gaze = { x: 0, y: 0 };
+    let eyes = null;   // cached screen position of the point between the robot's eyes
+    let heroBox = null;
+    let robotBox = null;   // the robot plus a small margin: the only area where looking around opens panels
+    let nearRobot = false;
+    let overPanel = false;
     let scrollY = 0;
     let raf = 0;
+    let parallax = false;   // title / robot / card drift: only on the wide desktop layout
+
+    const ROBOT_MARGIN = 40;
+    const clamp = (v) => Math.max(-1, Math.min(1, v));
+    const measureEyes = () => {
+      const r = robot?.getBoundingClientRect();
+      eyes = r && r.width ? { x: r.left + r.width * 0.5, y: r.top + r.height * 0.314 } : null;
+      robotBox = r && r.width ? { l: r.left - ROBOT_MARGIN, r: r.right + ROBOT_MARGIN, t: r.top - ROBOT_MARGIN, b: r.bottom } : null;
+      heroBox = hero?.getBoundingClientRect() || null;
+    };
+    // Near the robot, open the panel it's looking at: right = next event, left = stats, straight ahead = who we are.
+    // Further away it only follows the pointer with its head and eyes. An open panel stays open while the
+    // pointer is on it, so its buttons can be clicked. Slightly different thresholds for opening and closing
+    // stop it flickering at the edges.
+    const followGaze = () => {
+      if (!trackingRef.current || overPanel) return;
+      const now = lookRef.current;
+      const { x, y } = gaze;
+      let next = null;
+      if (nearRobot) {
+        if (now === 'right' && x > 0.2) next = 'right';
+        else if (now === 'left' && x < -0.2) next = 'left';
+        else if (now === 'center' && Math.abs(x) < 0.3 && y > -0.42) next = 'center';
+        else if (x > 0.3) next = 'right';
+        else if (x < -0.3) next = 'left';
+        else if (Math.abs(x) < 0.12 && y > -0.32) next = 'center';
+      }
+      if (next !== now) setLook(next);
+    };
+    const aimAt = (px, py) => {
+      if (!eyes) measureEyes();
+      if (!eyes) return;
+      // Treat the screen as a wall in front of the robot: the further the pointer, the bigger the angle
+      const depth = window.innerWidth * 0.55;
+      gazeTarget.x = clamp(Math.atan2(px - eyes.x, depth) / Math.atan2(window.innerWidth * 0.5, depth));
+      gazeTarget.y = clamp(Math.atan2(py - eyes.y, depth) / Math.atan2(window.innerHeight * 0.6, depth));
+    };
 
     const apply = () => {
       const h = hero?.offsetHeight || 1;
       const p = Math.min(1, Math.max(0, scrollY / h));
       const { x: mx, y: my } = cur;
-      if (title) {
+      if (parallax && title) {
         title.style.transform = `translate3d(${(mx * 10).toFixed(2)}px,${(my * 10).toFixed(2)}px,0) scale(${(1 - p * 0.1).toFixed(4)})`;
         title.style.opacity = (1 - p * 0.9).toFixed(3);
       }
       if (robot) {
-        robot.style.transform = `translate3d(${(-mx * 18).toFixed(2)}px,${(-my * 18 + scrollY * 0.3).toFixed(2)}px,0)`;
-        robot.style.setProperty('--hm-look-x', `${(mx * 4).toFixed(2)}px`);
-        robot.style.setProperty('--hm-look-y', `${(my * 3).toFixed(2)}px`);
-        if (holo) holo.style.transform = robot.style.transform;  
+        if (parallax) {
+          robot.style.transform = `translate3d(${(-mx * 18).toFixed(2)}px,${(-my * 18 + scrollY * 0.3).toFixed(2)}px,0)`;
+          if (holo) holo.style.transform = robot.style.transform;
+        }
+        robot.style.setProperty('--hm-look-x', `${(gaze.x * 5).toFixed(2)}px`);
+        robot.style.setProperty('--hm-look-y', `${(gaze.y * 4).toFixed(2)}px`);
       }
-      cards.forEach((el) => { el.style.transform = `translate3d(${(mx * 6).toFixed(2)}px,${(my * 6).toFixed(2)}px,0)`; });
+      if (hero) {
+        hero.style.setProperty('--gx', gaze.x.toFixed(4));
+        hero.style.setProperty('--gy', gaze.y.toFixed(4));
+        hero.style.setProperty('--gax', Math.abs(gaze.x).toFixed(4));
+        hero.style.setProperty('--gl', Math.max(0, -gaze.x).toFixed(4));
+        hero.style.setProperty('--gr', Math.max(0, gaze.x).toFixed(4));
+      }
+      if (parallax) cards.forEach((el) => { el.style.transform = `translate3d(${(mx * 6).toFixed(2)}px,${(my * 6).toFixed(2)}px,0)`; });
     };
     const frame = () => {
       raf = 0;
       cur.x += (target.x - cur.x) * 0.08;
       cur.y += (target.y - cur.y) * 0.08;
+      gaze.x += (gazeTarget.x - gaze.x) * 0.18;
+      gaze.y += (gazeTarget.y - gaze.y) * 0.18;
       apply();
-      if (Math.abs(target.x - cur.x) > 0.001 || Math.abs(target.y - cur.y) > 0.001) request();
+      followGaze();
+      const moving = (a, b) => Math.abs(a.x - b.x) > 0.001 || Math.abs(a.y - b.y) > 0.001;
+      if (moving(target, cur) || moving(gazeTarget, gaze)) request();
     };
     const request = () => { if (!raf) raf = requestAnimationFrame(frame); };
     const onPointer = (e) => {
       target.x = (e.clientX / window.innerWidth - 0.5) * 2;
       target.y = (e.clientY / window.innerHeight - 0.5) * 2;
+      const px = e.clientX;
+      const py = e.clientY;
+      aimAt(px, py);
+      // Panels only open near the robot (and never over the navbar or further down the page)
+      const inHero = !!heroBox && py > heroBox.top + 80 && py < heroBox.bottom;
+      nearRobot = inHero && !!robotBox && px > robotBox.l && px < robotBox.r && py > robotBox.t && py < robotBox.b;
+      const open = lookRef.current && panelRefs.current[lookRef.current];
+      const pr = open ? open.getBoundingClientRect() : null;
+      overPanel = !!pr && px >= pr.left && px <= pr.right && py >= pr.top && py <= pr.bottom;
       request();
     };
     const onScroll = () => {
@@ -189,43 +257,62 @@ export default function Hero() {
       const h = hero?.offsetHeight || 0;
       if (y > h * 1.2 && scrollY > h * 1.2) return;
       scrollY = y;
+      eyes = null;
       request();
     };
-    const onLeave = () => { target.x = 0; target.y = 0; request(); };
+    const onResize = () => { eyes = null; };
+    const onLeave = () => { target.x = 0; target.y = 0; gazeTarget.x = 0; gazeTarget.y = 0; nearRobot = false; overPanel = false; request(); };
     const reset = () => {
       target.x = target.y = cur.x = cur.y = 0;
+      gazeTarget.x = gazeTarget.y = gaze.x = gaze.y = 0;
       scrollY = 0;
       [title, robot, holo, ...cards].forEach((el) => { if (el) { el.style.transform = ''; el.style.opacity = ''; } });
       robot?.style.removeProperty('--hm-look-x');
       robot?.style.removeProperty('--hm-look-y');
+      hero?.removeAttribute('data-tracking');
+      trackingRef.current = false;
+      ['--gx', '--gy', '--gax', '--gl', '--gr'].forEach((v) => hero?.style.removeProperty(v));
     };
 
-    let active = false;
+    // With a mouse the head follows the pointer at every width (narrow desktop windows included);
+    // touch screens use the tap zones. The parallax drift is only for the wide desktop layout.
+    let mode = '';
     const setMode = () => {
-      if (desktop.matches === active) return;
-      active = desktop.matches;
-      if (active) {
-        if (finePointer.matches) window.addEventListener('pointermove', onPointer, { passive: true });
-        window.addEventListener('scroll', onScroll, { passive: true });
+      const track = finePointer.matches;
+      const wide = desktop.matches;
+      const next = `${track}/${wide}`;
+      if (next === mode) return;
+      mode = next;
+      window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      document.removeEventListener('mouseleave', onLeave);
+      reset();
+      parallax = wide;
+      if (!track && !wide) return;
+      if (track) {
+        window.addEventListener('pointermove', onPointer, { passive: true });
         document.addEventListener('mouseleave', onLeave);
-        onScroll();
-      } else {
-        window.removeEventListener('pointermove', onPointer);
-        window.removeEventListener('scroll', onScroll);
-        document.removeEventListener('mouseleave', onLeave);
-        reset();
+        hero?.setAttribute('data-tracking', '');   // head follows the exact pointer instead of the three zones (an attribute, so React's className updates don't wipe it)
+        trackingRef.current = true;
       }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize);
+      onScroll();
     };
     setMode();
     desktop.addEventListener('change', setMode);
+    finePointer.addEventListener('change', setMode);
     return () => {
       desktop.removeEventListener('change', setMode);
+      finePointer.removeEventListener('change', setMode);
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
       document.removeEventListener('mouseleave', onLeave);
       cancelAnimationFrame(raf);
     };
-  }, [reduced]);
+  }, [reduced, setLook]);
 
   const panelProps = (dir, label) => ({
     id: `hm-holo-${dir}`,
@@ -234,7 +321,7 @@ export default function Hero() {
     inert: look !== dir,
     className: cn('hm-holo__panel', `hm-holo__panel--${dir}`, look === dir && 'is-active'),
     onPointerEnter: () => clearTimeout(hideTimer.current),
-    onPointerLeave: (e) => { if (e.pointerType === 'mouse') hideSoon(); },
+    onPointerLeave: (e) => { if (e.pointerType === 'mouse' && !trackingRef.current) hideSoon(); },
     onBlur: (e) => { if (!isInside(e.relatedTarget)) hideSoon(); },
   });
 
@@ -313,8 +400,8 @@ export default function Hero() {
                 aria-controls={`hm-holo-${dir}`}
                 aria-expanded={look === dir}
                 aria-label={label}
-                onPointerEnter={(e) => { if (e.pointerType === 'mouse') setLook(dir); }}
-                onPointerLeave={(e) => { if (e.pointerType === 'mouse') hideSoon(); }}
+                onPointerEnter={(e) => { if (e.pointerType === 'mouse' && !trackingRef.current) setLook(dir); }}
+                onPointerLeave={(e) => { if (e.pointerType === 'mouse' && !trackingRef.current) hideSoon(); }}
                 onClick={() => {
                   // Touch / pen: tap toggles. Mouse: hover already opened it.
                   if (lastPointer.current !== 'mouse' && lookRef.current === dir) setLook(null);
@@ -325,11 +412,6 @@ export default function Hero() {
               />
             ))}
           </div>
-          <p className="hm-hero__hint" aria-hidden="true">
-            <span className="hm-hero__hint-dot" />
-            <span className="hm-hero__hint-mouse">hover my face</span>
-            <span className="hm-hero__hint-touch">tap my face</span>
-          </p>
           <p className="hm-hero__bubble" aria-hidden="true">
             <span><TypingText text={command} reduced={reduced} /></span>
             <span className="hm-hero__caret">_</span>

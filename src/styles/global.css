@@ -27,8 +27,6 @@
   --ease-out-expo: cubic-bezier(.16,1,.3,1);
 
   --shadow-glow: 0 0 24px -4px rgba(70,196,107,.45);
-  --shadow-brutal: 4px 4px 0 #000, 4px 4px 0 1px rgba(70,196,107,.45);
-  --shadow-brutal-hover: 6px 6px 0 #000, 6px 6px 0 1px rgba(70,196,107,.6), 0 0 28px rgba(70,196,107,.45);
 
   --animate-led: led-pulse 1.6s ease-in-out infinite;
   --animate-marquee: marquee 45s linear infinite;
@@ -166,4 +164,25 @@ body::after {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ===== Gee, the chat helper ===== */
+@keyframes gee-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes gee-wave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
+@keyframes gee-pop { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes gee-msg { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes gee-dot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+.gee-body { animation: gee-bob 3.2s ease-in-out infinite; }
+.gee-arm { transform-box: view-box; transform-origin: 30px 54px; animation: gee-wave 2.6s ease-in-out infinite; }
+.gee-btn:hover .gee-arm { animation-duration: .6s; }
+.gee-scarf { transform-box: view-box; transform-origin: 32.8px 72px; animation: gee-sway 3.2s ease-in-out infinite; }
+@keyframes gee-sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(6deg); } }
+/* both eyes blink together every few seconds */
+.gee-eye { transform-box: fill-box; transform-origin: center; animation: gee-blink 4.2s ease-in-out infinite; }
+.gee-tear { animation: gee-tear 2.4s ease-in infinite; }
+@keyframes gee-tear { 0%, 15% { opacity: 0; transform: translateY(-1.5px); } 30% { opacity: 1; } 85% { opacity: 1; transform: translateY(3px); } 100% { opacity: 0; transform: translateY(4px); } }
+@keyframes gee-caret { 50% { opacity: 0; } }
+@keyframes gee-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@media (prefers-reduced-motion: reduce) {
+  .gee-body, .gee-arm, .gee-eye, .gee-scarf, .gee-tear { animation: none; }
 }

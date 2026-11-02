@@ -10,7 +10,10 @@ export const CONFIG = {
 
   logoMark: 'assets/logo/gfg-mark.svg',
 
-  contactFormEmbedUrl: '',  
+  contactFormEmbedUrl: '',
+  // Google Apps Script web-app URL that saves contact messages to a Google Sheet
+  // (setup steps in apps-script/contact-form.gs). Leave empty and the form only shows a thank-you.
+  contactSheetUrl: 'https://script.google.com/macros/s/AKfycby2d_1EEvfGo0FhTODbRcDpvpjq3sUj2HJpmfpzA8TVxbcIuqg5xxeBIMQDruDaa9fw/exec',
   heroImage: 'assets/hero/hero-robot.webp',
 
   email: 'gfg.srmist@gmail.com',

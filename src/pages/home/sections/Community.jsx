@@ -1,24 +1,20 @@
-import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
+import { ArrowDownRight } from 'lucide-react';
 import { CONFIG } from '../../../config';
-import { SocialIcon } from '../../../components/ui/Social';
 import { SectionLabel } from '../../../components/ui/primitives';
 import CountUp from '../../../components/ui/CountUp';
 import Reveal from '../../../components/ui/Reveal';
 import { CORE_TEAM, DOMAIN_LEADS } from '../../team/team.data';
+import SpeechBubbles from './SpeechBubbles';
+import NeonSign from './NeonSign';
 
 const TESTIMONIALS = [...CORE_TEAM, ...DOMAIN_LEADS].filter((member) => member.quote).slice(0, 3);
-const SOCIALS = [
-  { name: 'instagram', label: 'Instagram' },
-  { name: 'linkedin', label: 'LinkedIn' },
-  { name: 'github', label: 'GitHub' },
-];
 
 export default function Community() {
   return (
     <section
       id="community"
       aria-labelledby="community-title"
-      className="relative isolate overflow-hidden border-b border-line"
+      className="relative isolate overflow-hidden border-b border-line pb-16 md:pb-20"
     >
       <div
         aria-hidden="true"
@@ -55,15 +51,9 @@ export default function Community() {
 
             <div className="relative flex min-h-[260px] items-center justify-center py-12">
               <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-line/70" />
-              <h2
-                id="community-title"
-                className="relative z-10 flex flex-wrap items-center justify-center gap-x-[.16em] text-center font-display text-[clamp(48px,11.5vw,148px)] font-bold uppercase leading-[.85] tracking-[-.075em]"
-              >
-                <Reveal as="span" className="flex flex-col items-center justify-center gap-2 rounded-3xl border-2 border-green-bright/40 bg-green-bright/[.07] px-8 py-4 sm:px-16">
-                   <span className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-display-light">Better</span>
-                    <span className="mt-3 font-display text-[clamp(48px,7vw,100px)] font-light leading-[.95] tracking-[-.05em] text-green-bright ">Together</span>
-                </Reveal>
-              </h2>
+              <Reveal className="relative z-10">
+                <NeonSign id="community-title" />
+              </Reveal>
             </div>
 
             <div className="grid gap-8 border-t border-line/70 py-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:py-8">
@@ -113,58 +103,10 @@ export default function Community() {
             </p>
           </Reveal>
 
-          {TESTIMONIALS.length > 0 && (
-            <div className="mt-7 grid gap-3 md:grid-cols-2">
-              {TESTIMONIALS.map((member, index) => (
-                <Reveal
-                  key={`${member.name}-${member.role}`}
-                  delay={index * 90}
-                  as="blockquote"
-                  className={`flex min-h-48 flex-col justify-between gap-8 rounded-card border p-5 transition-colors duration-300 sm:p-7 ${
-                    index === 0
-                      ? 'border-green-bright/40 bg-green-bright/[.07] md:col-span-2'
-                      : 'border-line bg-surface/60 hover:border-green-bright/40 md:col-span-2'
-                  }`}
-                >
-                  <p className="max-w-[850px] font-display text-[clamp(21px,3vw,34px)] font-light leading-snug tracking-[-.025em] text-display-light">
-                    “{member.quote}”
-                  </p>
-                  <footer className="flex items-center gap-3 font-mono text-[11px] tracking-[.1em] text-muted uppercase">
-                    <span aria-hidden="true" className="h-px w-7 bg-green-bright" />
-                    <cite className="not-italic text-text">{member.name}</cite>
-                    <span aria-hidden="true">/</span>
-                    {member.role}
-                  </footer>
-                </Reveal>
-              ))}
-            </div>
-          )}
+          <Reveal>
+            <SpeechBubbles people={TESTIMONIALS} />
+          </Reveal>
         </div>
-
-        <Reveal className="mt-10 flex flex-wrap items-center justify-between gap-5 border-t border-line pt-7 md:mt-14">
-          <div>
-            <SectionLabel>// Stay in the loop</SectionLabel>
-            <p className="mt-3 font-display text-2xl font-light tracking-[-.025em] text-display-light">
-              Follow what we’re building.
-            </p>
-          </div>
-          <nav aria-label="Community social links" className="flex flex-wrap gap-2">
-            {SOCIALS.filter(({ name }) => CONFIG.socials[name]).map(({ name, label }) => (
-              <a
-                key={name}
-                href={CONFIG.socials[name]}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`GeeksforGeeks SRMIST on ${label} (opens in a new tab)`}
-                className="group inline-flex min-h-11 items-center gap-2.5 rounded-full border border-line bg-surface/60 px-4 font-mono text-[11px] font-medium tracking-[.08em] uppercase text-muted transition-colors hover:border-green-bright/60 hover:text-green-bright"
-              >
-                <SocialIcon name={name} className="size-4" />
-                {label}
-                <ArrowUpRight aria-hidden="true" className="size-3.5 opacity-50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </a>
-            ))}
-          </nav>
-        </Reveal>
       </div>
     </section>
   );

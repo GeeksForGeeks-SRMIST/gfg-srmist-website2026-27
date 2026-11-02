@@ -325,44 +325,6 @@
 .hm-hero__zone--center { flex-grow: .85; }
 .hm-hero__zone:focus-visible { outline: 1px dashed rgba(70,196,107,.75); outline-offset: -6px; }
 
-/* "hover my face" hint chip on the collar */
-.hm-hero__hint {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  top: 57%;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 12px;
-  border: 1px solid rgba(70,196,107,.35);
-  border-radius: var(--radius-pill);
-  background: rgba(0,0,0,.6);
-  -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
-  font: 500 10.5px/1 var(--font-mono);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--text-muted);
-  transform: translateX(-50%);
-  pointer-events: none;
-  transition: opacity .3s var(--ease);
-  animation: hm-fade .6s ease 1.7s backwards;   /* backwards: lets [data-look] hide it afterwards */
-}
-.hm-hero__hint-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--neon);
-  box-shadow: 0 0 8px var(--neon);
-  animation: hm-led 1.6s ease-in-out infinite;
-}
-.hm-hero__hint-touch { display: none; }
-@media (hover: none) {
-  .hm-hero__hint-mouse { display: none; }
-  .hm-hero__hint-touch { display: inline; }
-}
 
 /* Speech bubble */
 .hm-hero__bubble {
@@ -474,8 +436,30 @@
 .hm-hero[data-look="center"] .hm-hero__face { transform: translateY(-1%) scale(1.035); }
 .hm-hero[data-look="center"] .hm-hero__spec { opacity: .75; }
 
-.hm-hero[data-look] .hm-hero__fx,
-.hm-hero[data-look] .hm-hero__hint { opacity: 0; }
+/* POINTER TRACKING (desktop with a mouse): instead of the three poses above, the head follows the exact
+   pointer position. Hero.jsx sets --gx / --gy (-1..1) from the angle between the robot's eyes and the
+   pointer, and smooths them every frame, so no CSS transition is needed here. */
+.hm-hero[data-tracking] .hm-hero__head,
+.hm-hero[data-tracking] .hm-hero__face,
+.hm-hero[data-tracking] .hm-hero__body,
+.hm-hero[data-tracking] .hm-hero__spec,
+.hm-hero[data-tracking] .hm-hero__shade { transition: none; }
+.hm-hero[data-tracking] .hm-hero__head {
+  transform: perspective(calc(var(--hm-robot-w) * 2))
+    translate(calc(var(--gx, 0) * 1.6%), calc(var(--gy, 0) * .6%))
+    rotateY(calc(var(--gx, 0) * 13deg))
+    rotateX(calc(var(--gy, 0) * -7deg))
+    rotateZ(calc(var(--gx, 0) * 2deg));
+}
+.hm-hero[data-tracking] .hm-hero__face {
+  transform: translate(calc(var(--gx, 0) * 4.8%), calc(var(--gy, 0) * 1.8%)) scaleX(calc(1 - var(--gax, 0) * .06));
+}
+.hm-hero[data-tracking] .hm-hero__body { transform: perspective(calc(var(--hm-robot-w) * 2.6)) rotateY(calc(var(--gx, 0) * 4deg)); }
+.hm-hero[data-tracking] .hm-hero__spec { opacity: var(--gax, 0); transform: translateX(calc(var(--gx, 0) * 11%)); }
+.hm-hero[data-tracking] .hm-hero__shade--l { opacity: var(--gl, 0); }
+.hm-hero[data-tracking] .hm-hero__shade--r { opacity: var(--gr, 0); }
+
+.hm-hero[data-look] .hm-hero__fx { opacity: 0; }
 
 /* Spotlight: side content dims while the robot is "talking" */
 .hm-hero__intro,
@@ -983,6 +967,11 @@
   }
   .hm-hero__next { justify-items: start; }
   .hm-stat { height: 120px; }
+  /* side panels stay on screen in narrower windows */
+  .hm-holo__panel--left,
+  .hm-holo__panel--right { width: min(272px, 31vw); }
+  .hm-holo__panel--left { right: auto; left: 16px; }
+  .hm-holo__panel--right { left: auto; right: 16px; }
 }
 
 /* ≤768: robot ~60vh centred, everything stacked + centred, next card hidden */
@@ -1003,19 +992,38 @@
   .hm-hero__bubble { left: 50%; top: 49%; transform: translate(-50%, 8px) scale(.94); transform-origin: 50% 0; border-radius: 12px; }
   .hm-hero__robot.is-talking .hm-hero__bubble { transform: translate(-50%, 0); }
   .hm-hero__bubble { display: none; }
+  /* compact panels under the face: stats on the left, who-we-are in the middle, the event on the right */
   .hm-holo__panel,
   .hm-holo__panel--left,
   .hm-holo__panel--right,
   .hm-holo__panel--center {
-    left: 50%;
-    right: auto;
     top: auto;
-    bottom: 4%;
-    width: min(340px, calc(100vw - 32px));
-    margin-left: calc(min(340px, calc(100vw - 32px)) / -2);
-    --hm-holo-from: translateY(14px);
+    bottom: 3%;
+    width: min(250px, calc(100vw - 64px));
+    margin-left: 0;
+    padding: 12px 14px;
+    --hm-holo-from: translateY(12px);
   }
+  .hm-holo__panel--left { left: 16px; right: auto; }
+  .hm-holo__panel--right { left: auto; right: 16px; }
+  .hm-holo__panel--center { left: 50%; right: auto; margin-left: calc(min(250px, calc(100vw - 64px)) / -2); }
   .hm-holo__panel::after { display: none; }
+  .hm-holo__label { font-size: 10px; }
+  .hm-holo__heading { font-size: 18px; }
+  .hm-about-lead--panel { margin-top: 6px; font-size: 14px; }
+  .hm-holo__panel--center .hm-holo__text { display: none; }
+  .hm-holo__text { font-size: 12px; line-height: 1.45; }
+  .hm-holo__link { margin-top: 10px; font-size: 11px; }
+  .hm-holo__stats { gap: 8px; margin-top: 10px; }
+  .hm-holo__stat { padding: 9px; }
+  .hm-holo__num { font-size: 28px; }
+  .hm-holo__k { margin-top: 5px; font-size: 10.5px; }
+  .hm-holo__event { gap: 10px; margin-top: 10px; }
+  .hm-holo__thumb { width: 48px; height: 48px; }
+  .hm-holo__date { font-size: 10px; }
+  .hm-holo__title { margin-top: 4px; font-size: 16px; }
+  .hm-holo__venue { font-size: 11px; }
+  .hm-holo__cta { margin-top: 10px; min-height: 38px; padding-block: 8px; font-size: 11px; }
 }
 
 /* Small phones */
@@ -1050,7 +1058,106 @@
   .hm-hero[data-look] .hm-hero__spec { transform: none; transition: none; }
   .hm-holo__panel,
   .hm-holo__panel.is-active { transform: none; animation: none; }
-  .hm-hero__hint-dot,
   .hm-holo__label::before { animation: none; }
   .hm-next:hover .hm-next__thumb > * { transform: none; }
 }
+
+
+/* ===== "Better together" neon bar sign (Community section) ===== */
+.neon-board {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(28px, 4vw, 48px) clamp(28px, 6vw, 84px) clamp(34px, 4.5vw, 54px);
+  border-radius: 26px;
+  border: 1px solid #1b2a21;
+  background:
+    radial-gradient(70% 90% at 50% 45%, rgba(0, 230, 118, .10), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .018) 0 1px, transparent 1px 22px),
+    linear-gradient(180deg, #08100b, #040705);
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, .85), 0 40px 90px -45px rgba(0, 230, 118, .45);
+  animation: neon-hum 3.2s ease-in-out infinite;
+}
+/* glowing tube running round the board, blended in the same three colours */
+.neon-board::before,
+.neon-board::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 18px;
+  padding: 2px;
+  background: linear-gradient(90deg, #3df5cf, #00e676 50%, #c5f55a);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+.neon-board::after { filter: blur(7px); opacity: .85; }
+
+.neon-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .06em;
+  font-family: "Tilt Neon", var(--font-display);
+  font-size: clamp(52px, 9vw, 128px);
+  font-weight: 400;
+  line-height: .95;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.neon-word { display: flex; }
+.neon-letter {
+  color: var(--core);
+  text-shadow:
+    0 0 2px var(--core),
+    0 0 6px var(--n),
+    0 0 16px var(--n),
+    0 0 34px var(--n),
+    0 0 70px color-mix(in srgb, var(--n) 55%, transparent);
+}
+
+/* the tired tubes: mostly on, with irregular stutters and the odd blackout */
+.neon-flicker-a { animation: neon-flicker-a 7s linear infinite; }
+.neon-flicker-b { animation: neon-flicker-b 9.5s linear infinite 1.3s; }
+@keyframes neon-flicker-a {
+  0%, 18%, 21%, 23%, 52%, 54.5%, 100% { color: var(--core); text-shadow: 0 0 2px var(--core), 0 0 6px var(--n), 0 0 16px var(--n), 0 0 34px var(--n), 0 0 70px color-mix(in srgb, var(--n) 55%, transparent); }
+  19%, 22%, 53%, 53.6% { color: #1b2620; text-shadow: none; }
+}
+@keyframes neon-flicker-b {
+  0%, 31%, 33%, 34.5%, 70%, 78%, 100% { color: var(--core); text-shadow: 0 0 2px var(--core), 0 0 6px var(--n), 0 0 16px var(--n), 0 0 34px var(--n), 0 0 70px color-mix(in srgb, var(--n) 55%, transparent); }
+  32%, 33.8%, 71%, 72%, 73.5%, 74.5%, 75.5%, 76.5%, 77.5% { color: #1b2620; text-shadow: none; }
+}
+@keyframes neon-hum { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.06); } }
+
+/* little steady label and mounting screws */
+.neon-tag {
+  position: relative;
+  margin-top: clamp(14px, 2vw, 22px);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .32em;
+  color: #9ff7dd;
+  text-shadow: 0 0 6px rgba(61, 245, 207, .8);
+}
+.neon-screw {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #8b958f, #2a312d 70%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .8);
+}
+.neon-screw--tl { top: 5px; left: 5px; }
+.neon-screw--tr { top: 5px; right: 5px; }
+.neon-screw--bl { bottom: 5px; left: 5px; }
+.neon-screw--br { bottom: 5px; right: 5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-board, .neon-flicker-a, .neon-flicker-b { animation: none; }
+}
+
+/* Domains section: description fades in when the polaroid on top changes */
+@keyframes domain-progress { from { width: 0; } to { width: 100%; } }
+@keyframes domain-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

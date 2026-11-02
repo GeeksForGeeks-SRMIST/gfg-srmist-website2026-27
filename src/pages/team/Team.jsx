@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router';
 import { Users } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import Reveal from '../../components/ui/Reveal';
 import Tabs from '../../components/ui/Tabs';
-import { EmptyState, GlassCard, SectionLabel, SectionTitle } from '../../components/ui/primitives';
+import { EmptyState, SectionLabel, SectionTitle } from '../../components/ui/primitives';
 import { asset, cn } from '../../lib/utils';
 import { ASSOCIATE_LEADS, CORE_TEAM, DOMAIN_LEADS, FACULTY, MEMBERS, TEAM_DOMAINS } from './team.data';
 
@@ -16,35 +17,9 @@ const initials = (name) =>
     .map((w) => w[0].toUpperCase())
     .join('');
 
-function Photo({ person, large }) {
-  const [failed, setFailed] = useState(false);
-  return (
-    <div
-      className={cn(
-        'relative aspect-square overflow-hidden rounded-[10px] bg-bg-2',
-        'after:absolute after:inset-0 after:z-[2] after:rounded-[inherit] after:opacity-0 after:transition-opacity after:duration-400',
-        'after:shadow-[inset_0_0_0_2px_var(--green-bright),inset_0_0_24px_-6px_rgba(70,196,107,.45)] group-hover:after:opacity-100',
-        large && 'max-w-[320px] md:max-w-none',
-      )}
-    >
-      {person.photo && !failed ? (
-        <img src={asset(person.photo)} alt={`Photo of ${person.name}`} loading="lazy" decoding="async" width="480" height="480" onError={() => setFailed(true)} className="size-full object-cover" />
-      ) : (
-        <div role="img" aria-label={`${person.name} (photo coming soon)`} className="grid size-full place-items-center bg-[radial-gradient(70%_60%_at_30%_20%,rgba(70,196,107,.16),transparent_70%),repeating-linear-gradient(135deg,rgba(255,255,255,.035)_0_1px,transparent_1px_12px)] bg-bg-2">
-          <span aria-hidden="true" className="font-display text-[clamp(40px,5vw,64px)] font-light tracking-[-.04em] text-muted">{initials(person.name)}</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-const Role = ({ children }) => (
-  <p className="mt-1.5 font-mono text-xs font-medium leading-snug tracking-[.08em] uppercase text-green-bright">{children}</p>
-);
-
 const bracket = 'absolute size-4 border-green-bright/70 transition-all duration-500 group-hover/card:size-5 group-hover/card:border-green-bright';
 
-// Front: full-bleed photo with a soft green colour grade, HUD corner brackets, jersey number, name + role over a gradient
+// Front: full-bleed photo as it is, HUD corner brackets, jersey number, name + role over a gradient
 function CardFront({ person, index }) {
   const [failed, setFailed] = useState(false);
   return (
@@ -58,23 +33,19 @@ function CardFront({ person, index }) {
           width="480"
           height="640"
           onError={() => setFailed(true)}
-          className="absolute inset-0 size-full object-cover object-top saturate-[.95] contrast-[1.03] transition-transform duration-700 ease-out-expo group-hover/card:scale-[1.06]"
+          className="absolute inset-0 size-full object-cover object-top transition-transform duration-700 ease-out-expo group-hover/card:scale-[1.06]"
         />
       ) : (
         <div role="img" aria-label={`${person.name} (photo coming soon)`} className="absolute inset-0 grid place-items-center bg-[radial-gradient(70%_60%_at_30%_20%,rgba(70,196,107,.16),transparent_70%),repeating-linear-gradient(135deg,rgba(255,255,255,.03)_0_1px,transparent_1px_12px)] pb-12">
           <span aria-hidden="true" className="font-display text-[clamp(40px,4.5vw,56px)] font-light tracking-[-.04em] text-muted">{initials(person.name)}</span>
         </div>
       )}
-      {/* Colour grade: the face area stays natural; the background and edges take a GfG-green cast and darken,
-          so bright or busy backgrounds blend into the page. Then a corner glow and a fade at the bottom. */}
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(75%_55%_at_50%_36%,transparent_50%,#46C46B_100%)] opacity-25 mix-blend-color" />
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_36%,transparent_60%,rgba(20,60,34,.2)_100%)] mix-blend-multiply" />
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(120%_70%_at_0%_0%,rgba(70,196,107,.22),transparent_55%)] mix-blend-soft-light" />
-      <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-[#04100a]/85 from-5% via-[#04100a]/20 via-30% to-transparent to-55%" />
+      {/* Photos are shown as they are; only a neutral dark fade at the bottom keeps the name readable */}
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[42%] bg-linear-to-t from-black/85 via-black/35 to-transparent" />
 
       <span aria-hidden="true" className={`${bracket} left-2.5 top-2.5 rounded-tl-[3px] border-l-2 border-t-2`} />
       <span aria-hidden="true" className={`${bracket} bottom-2.5 right-2.5 rounded-br-[3px] border-b-2 border-r-2`} />
-      <span aria-hidden="true" className="absolute left-5 top-4 font-mono text-[10px] font-medium tracking-[.14em] text-white/85 [text-shadow:0_1px_6px_rgba(0,0,0,.9)]">
+      <span aria-hidden="true" className="absolute left-5 top-4 rounded-full bg-black/55 px-1.5 py-px font-mono text-[10px] font-medium tracking-[.14em] text-white/90 backdrop-blur-sm">
         #{String(index + 1).padStart(2, '0')}
       </span>
       <div className="absolute inset-x-0 bottom-0 p-3.5 pr-8">
@@ -85,30 +56,47 @@ function CardFront({ person, index }) {
   );
 }
 
-// Back (shown on hover): the quote, with a small avatar, name and role
+// Back (shown on hover): plain black with a thin white border, a big quote mark, the quote and a signature line.
+// Faculty cards show their designation and department instead.
 function CardBack({ person }) {
+  const isFaculty = Boolean(person.designation);
   return (
-    <div className="absolute inset-0 flex flex-col overflow-hidden rounded-card border border-green-bright/50 bg-bg-2 bg-[radial-gradient(120%_70%_at_0%_0%,rgba(70,196,107,.22),transparent_60%),repeating-linear-gradient(135deg,rgba(255,255,255,.03)_0_1px,transparent_1px_12px)] p-3.5 shadow-[0_0_0_1px_rgba(70,196,107,.15),0_18px_50px_-14px_rgba(70,196,107,.55)] rotate-y-180 backface-hidden sm:p-4">
-      <span className="font-mono text-[9px] font-medium tracking-[.16em] uppercase text-muted sm:text-[10px]">// in their words</span>
-      {person.quote ? (
-        <blockquote className="my-auto line-clamp-6 py-3 font-display text-[14px] font-light leading-snug tracking-[-.01em] text-display-light sm:text-[16px]">
-          “{person.quote}”
+    <div className="absolute inset-0 flex flex-col overflow-hidden rounded-card border border-white/70 bg-black p-4 rotate-y-180 backface-hidden sm:p-5">
+      <span
+        aria-hidden="true"
+        className="relative -mb-4 -ml-1 block font-[Georgia,serif] text-[72px] leading-none text-green-bright sm:text-[84px]"
+      >
+        {isFaculty ? '' : '“'}
+      </span>
+
+      {isFaculty ? (
+        <div className="relative my-auto">
+          <span className="font-mono text-[9px] font-medium tracking-[.16em] uppercase text-muted sm:text-[10px]">// faculty</span>
+          <p className="mt-2 font-display text-[17px] font-light leading-snug tracking-[-.01em] text-display-light sm:text-[20px]">{person.designation}</p>
+          {person.department && <p className="mt-2 text-[12.5px] leading-relaxed text-muted sm:text-[13px]">{person.department}</p>}
+          <p className="mt-3 font-mono text-[10px] tracking-[.12em] uppercase text-green-bright">SRMIST</p>
+        </div>
+      ) : person.quote ? (
+        <blockquote className="relative my-auto line-clamp-6 font-display text-[16px] font-normal leading-[1.35] tracking-[-.015em] text-white sm:text-[19px]">
+          {person.quote}
         </blockquote>
       ) : (
-        <p className="my-auto py-3 font-mono text-[11px] leading-relaxed text-muted sm:text-xs">
+        <p className="relative my-auto font-mono text-[11px] leading-relaxed text-muted sm:text-xs">
           // quote still compiling…
           <br />
           <span className="text-green-bright">check back soon</span>
         </p>
       )}
-      <div aria-hidden="true" className="flex items-center gap-2.5 border-t border-line pt-3">
+
+      {/* signature */}
+      <div aria-hidden="true" className="relative mt-3 flex items-center gap-2.5">
         {person.photo ? (
-          <img src={asset(person.photo)} alt="" loading="lazy" decoding="async" width="36" height="36" className="size-9 shrink-0 rounded-full object-cover object-top saturate-[.85] ring-2 ring-green-bright/60 ring-offset-2 ring-offset-bg-2" />
+          <img src={asset(person.photo)} alt="" loading="lazy" decoding="async" width="32" height="32" className="size-8 shrink-0 rounded-full object-cover object-top ring-2 ring-green-bright/60" />
         ) : (
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-green/20 font-display text-xs text-green-bright ring-2 ring-green-bright/60">{initials(person.name)}</span>
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-green/20 font-display text-[11px] text-green-bright ring-2 ring-green-bright/60">{initials(person.name)}</span>
         )}
         <div className="min-w-0">
-          <p className="truncate font-display text-[13px] font-semibold leading-tight sm:text-[14px]">{person.name}</p>
+          <p className="line-clamp-2 font-display text-[12.5px] font-semibold leading-tight text-white/90 sm:text-[13.5px]">— {person.name}</p>
           <p className="mt-0.5 truncate font-mono text-[9px] tracking-[.1em] uppercase text-green-bright sm:text-[10px]">{person.role}</p>
         </div>
       </div>
@@ -142,28 +130,12 @@ function ProfileCard({ person, index }) {
   );
 }
 
-function FacultyCard({ person }) {
-  return (
-    <GlassCard as="article" className="group grid items-center gap-5 p-3.5 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-12 md:p-5">
-      <Photo person={person} large />
-      <div className="px-1.5 pb-2 md:py-3 md:pl-0 md:pr-6">
-        <Role>{person.role}</Role>
-        <h3 className="mt-4 font-display text-[clamp(36px,5vw,64px)] font-light leading-[.95] tracking-[-.045em] text-display-light">{person.name}</h3>
-        {person.department && <p className="mt-3 text-muted">{person.department}</p>}
-        {person.quote && <blockquote className="mt-7 max-w-[520px] border-l-2 border-green pl-4.5 text-lg leading-normal">“{person.quote}”</blockquote>}
-      </div>
-    </GlassCard>
-  );
-}
-
-function Group({ id, label, title, people, small, faculty, byDomain, emptyWhat }) {
-  const [domain, setDomain] = useState(TEAM_DOMAINS[0].id);
+function Group({ id, label, title, people, small, byDomain, emptyWhat, startDomain }) {
+  const [domain, setDomain] = useState(startDomain || TEAM_DOMAINS[0].id);
 
   const list = (group, what) =>
     !group.length ? (
       <EmptyState icon={Users} title={`No ${what} added yet`} hint="// add people to the array in team.data.js" />
-    ) : faculty ? (
-      group.map((p) => <Reveal key={p.name}><FacultyCard person={p} /></Reveal>)
     ) : (
       <div className={cn('grid grid-cols-2 gap-3 sm:gap-4', small ? 'sm:grid-cols-[repeat(auto-fill,minmax(170px,190px))]' : 'sm:grid-cols-[repeat(auto-fill,minmax(190px,220px))]')}>
         {group.map((p, i) => (
@@ -205,14 +177,26 @@ function Group({ id, label, title, people, small, faculty, byDomain, emptyWhat }
 }
 
 export default function Team() {
+  // /team?domain=technical#tm-leads (from the Domains page): open that domain's tabs and jump to its leads
+  const [params] = useSearchParams();
+  const { hash } = useLocation();
+  const asked = params.get('domain');
+  const startDomain = TEAM_DOMAINS.some((d) => d.id === asked) ? asked : undefined;
+
+  useEffect(() => {
+    if (!hash) return undefined;
+    const raf = requestAnimationFrame(() => document.getElementById(hash.slice(1))?.closest('section')?.scrollIntoView({ block: 'start' }));
+    return () => cancelAnimationFrame(raf);
+  }, [hash, asked]);
+
   return (
     <>
       <PageHeader label="// 03 — Team" title="team" subtitle="The people who plan the events, run the domains and keep the club shipping." />
-      <Group id="tm-faculty" label="// Faculty coordinator" title="guiding us" people={FACULTY} faculty emptyWhat="faculty coordinator" />
+      <Group id="tm-faculty" label="// Faculty" title="guiding us" people={FACULTY} emptyWhat="faculty" />
       <Group id="tm-core" label="// Core team" title="core team" people={CORE_TEAM} emptyWhat="core team members" />
-      <Group id="tm-leads" label="// Domain leads" title="domain leads" people={DOMAIN_LEADS} byDomain emptyWhat="domain leads" />
-      <Group id="tm-associates" label="// Associate leads" title="associate leads" people={ASSOCIATE_LEADS} byDomain emptyWhat="associate leads" />
-      <Group id="tm-members" label="// Members" title="members" people={MEMBERS} small byDomain emptyWhat="members" />
+      <Group id="tm-leads" label="// Domain leads" title="domain leads" people={DOMAIN_LEADS} byDomain startDomain={startDomain} key={`${startDomain}`} emptyWhat="domain leads" />
+      <Group id="tm-associates" label="// Associate leads" title="associate leads" people={ASSOCIATE_LEADS} byDomain startDomain={startDomain} key={`${startDomain}`} emptyWhat="associate leads" />
+      <Group id="tm-members" label="// Members" title="members" people={MEMBERS} small byDomain startDomain={startDomain} key={`${startDomain}`} emptyWhat="members" />
     </>
   );
 }

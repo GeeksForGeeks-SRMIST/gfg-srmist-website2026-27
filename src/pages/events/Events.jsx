@@ -43,7 +43,7 @@ function UpcomingCard({ ev }) {
 
 function PastCard({ ev }) {
   return (
-    <GlassCard as="article" className="group overflow-hidden">
+    <GlassCard as="article" id={eventId(ev.title)} className="group scroll-mt-[calc(var(--nav-h)+24px)] overflow-hidden">
       <div className="overflow-hidden rounded-t-card">
         <Media
           src={ev.image}
@@ -70,10 +70,10 @@ export default function Events() {
   const [tab, setTab] = useState(hash === '#past' ? 'past' : 'upcoming');
   useEffect(() => {
     if (hash === '#past') { setTab('past'); return undefined; }
-    // A link like /events#idea-quest opens Upcoming and scrolls to that event's card
+    // A link like /events#idea-quest opens the right tab and scrolls to that event's card
     const el = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
     if (!el) return undefined;
-    setTab('upcoming');
+    setTab(el.closest('#ev-panel-past') ? 'past' : 'upcoming');
     const t = setTimeout(() => el.scrollIntoView({ block: 'start' }), 60);
     return () => clearTimeout(t);
   }, [hash]);

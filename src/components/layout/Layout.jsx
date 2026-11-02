@@ -4,6 +4,7 @@ import { CONFIG, NAV_LINKS } from '../../config';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import JoinDialog from '../join/JoinDialog';
+import ChatBot from '../chatbot/ChatBot';
 
 export default function Layout() {
   const [joinOpen, setJoinOpen] = useState(false);
@@ -32,8 +33,9 @@ export default function Layout() {
       <main id="main" ref={mainRef} tabIndex={-1}>
         <Outlet context={{ onJoin: openJoin }} />
       </main>
-      <Footer onJoin={openJoin} />
+      <Footer />
       <JoinDialog open={joinOpen} onClose={() => setJoinOpen(false)} />
+      <ChatBot onJoin={openJoin} />
     </>
   );
 }

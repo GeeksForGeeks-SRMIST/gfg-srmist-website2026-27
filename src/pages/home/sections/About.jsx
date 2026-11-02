@@ -1,43 +1,19 @@
-import { ArrowUpRight, Code2, Users, Lightbulb } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router';
-import {
-  GlassCard,
-  SectionLabel,
-  SectionTitle,
-} from '../../../components/ui/primitives';
-
-const HIGHLIGHTS = [
-  {
-    icon: Code2,
-    title: 'Build',
-    description:
-      'Turn ideas into practical projects, experiment with technology, and strengthen your problem-solving skills.',
-  },
-  {
-    icon: Users,
-    title: 'Collaborate',
-    description:
-      'Learn alongside a community of curious developers, exchange ideas, and create things together.',
-  },
-  {
-    icon: Lightbulb,
-    title: 'Grow',
-    description:
-      'Explore new concepts, take on challenges, and develop skills that extend beyond the classroom.',
-  },
-];
+import { SectionLabel, SectionTitle } from '../../../components/ui/primitives';
+import PolaroidStack from './PolaroidStack';
 
 export default function About() {
   return (
     <section
       id="about"
       aria-labelledby="about-title"
-      className="border-b border-line py-20 md:py-30"
+      className="border-b border-line py-16 md:py-20"
     >
       <div className="container-site">
         <SectionLabel>// 01 — About</SectionLabel>
 
-        <div className="mt-8 grid gap-10 md:mt-12 md:grid-cols-[1.1fr_0.9fr] md:gap-16">
+        <div className="mt-8 grid gap-10 md:mt-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-16">
           <div>
             <SectionTitle
               id="about-title"
@@ -64,30 +40,7 @@ export default function About() {
             </Link>
           </div>
 
-          <div className="grid gap-4">
-            {HIGHLIGHTS.map(({ icon: Icon, title, description }, index) => (
-              <GlassCard
-                key={title}
-                className="flex gap-4 p-5 md:p-6"
-              >
-                <div className="grid size-11 shrink-0 place-items-center rounded-xl border border-green-bright/20 bg-green/10 text-green-bright">
-                  <Icon size={21} aria-hidden="true" />
-                </div>
-
-                <div>
-                  <p className="font-mono text-xs tracking-[0.12em] text-muted">
-                    0{index + 1} / {title.toUpperCase()}
-                  </p>
-                  <h3 className="mt-2 font-display text-2xl lowercase text-display-light">
-                    {title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-muted">
-                    {description}
-                  </p>
-                </div>
-              </GlassCard>
-            ))}
-          </div>
+          <PolaroidStack />
         </div>
       </div>
     </section>

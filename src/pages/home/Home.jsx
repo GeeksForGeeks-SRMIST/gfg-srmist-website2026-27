@@ -5,7 +5,6 @@ import DomainsPreview from './sections/DomainsPreview';
 import FlagshipEvents from './sections/FlagshipEvents';
 import SponsorsStrip from './sections/SponsorsStrip';
 import Community from './sections/Community';
-import JoinCTA from './sections/JoinCTA';
 import './home.css';
 
 export default function Home() {
@@ -18,7 +17,6 @@ export default function Home() {
       <FlagshipEvents />
       <SponsorsStrip />
       <Community />
-      <JoinCTA />
     </>
   );
 }
