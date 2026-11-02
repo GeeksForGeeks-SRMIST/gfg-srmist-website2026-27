@@ -27,16 +27,16 @@ export const CONFIG = {
   ],
 
   nextEvent: {
-    title: 'Ideathon',
+    title: 'Idea Quest',
     date: 'Nov 2026',
-    venue: 'Main Auditorium',
-    blurb: '24-hour hackathon. Registrations are open — grab your spot.',
-    image: 'assets/events/next.jpg',
-    link: '/events',
-    registerUrl: '#',
+    venue: 'SRM KTR Campus',
+    blurb: '24-hour overnight hackathon for business & startup ideas, with Corporate Gurukul.',
+    image: 'assets/events/idea-quest.webp',
+    link: '/events#idea-quest',
+    registerUrl: '',
   },
 
-  upcomingTicker: ['Java verse', 'Ideathon', 'Ignisia'],
+  upcomingTicker: ['Idea Quest'],
 };
 
 export const NAV_LINKS = [

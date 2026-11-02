@@ -6,7 +6,7 @@ import { asset, cn, isExternal } from '../../lib/utils';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import Media from '../../components/ui/Media';
 import CountUp from '../../components/ui/CountUp';
-import Button from '../../components/ui/Button';
+import RegisterButton from '../../components/ui/RegisterButton';
 
 const ROBOT_COMMANDS = { left: 'stats --live', center: 'whoami', right: 'events --next' };
 const ZONES = [
@@ -369,9 +369,7 @@ export default function Hero() {
               </div>
             </div>
             {ev.blurb && <p className="hm-holo__text">{ev.blurb}</p>}
-            <Button href={ev.registerUrl || '#'} className="hm-holo__cta">
-              Register now <ArrowUpRight aria-hidden="true" />
-            </Button>
+            <RegisterButton url={ev.registerUrl} className="hm-holo__cta">Register now</RegisterButton>
           </section>
         </div>
       </div>

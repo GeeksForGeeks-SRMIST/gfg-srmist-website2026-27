@@ -1,25 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { ArrowUpRight, CalendarX, MapPin } from 'lucide-react';
+import { CalendarX, MapPin } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import Tabs from '../../components/ui/Tabs';
 import Reveal from '../../components/ui/Reveal';
 import Media from '../../components/ui/Media';
-import Button from '../../components/ui/Button';
+import RegisterButton from '../../components/ui/RegisterButton';
 import { Badge, EmptyState, GlassCard } from '../../components/ui/primitives';
 import { formatDate } from '../../lib/utils';
 import { PAST_EVENTS, UPCOMING_EVENTS } from './events.data';
 
+// "Idea Quest" -> "idea-quest", so /events#idea-quest jumps straight to that event
+const eventId = (title) => String(title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 function UpcomingCard({ ev }) {
   return (
-    <GlassCard as="article" className="grid gap-2 p-3.5 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)] md:gap-10 md:p-5">
+    <GlassCard as="article" id={eventId(ev.title)} className="grid scroll-mt-[calc(var(--nav-h)+24px)] gap-2 p-3.5 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)] md:gap-10 md:p-5">
       <div className="relative overflow-hidden rounded-[10px]">
-        <Media src={ev.image} alt={`${ev.title} poster`} label="Poster coming soon" className="aspect-[16/10] md:aspect-[4/5] md:h-full" />
+        <Media src={ev.image} alt={`${ev.title} poster`} label="Poster coming soon" className="aspect-[2/3] md:h-full" />
         <Badge variant="upcoming" className="absolute left-3.5 top-3.5">Upcoming</Badge>
       </div>
       <div className="flex flex-col items-start px-2 pb-2.5 pt-4 md:py-4 md:pl-0 md:pr-4">
         <p className="font-mono text-[13px] font-medium leading-none tracking-[.12em] uppercase text-green-bright">
-          <time dateTime={ev.date}>{formatDate(ev.date)}</time>
+          {ev.date ? <time dateTime={ev.date}>{formatDate(ev.date)}</time> : 'Dates to be announced'}
           {ev.time && <> <span aria-hidden="true">·</span> {ev.time}</>}
         </p>
         <h2 className="mt-4.5 font-display text-[clamp(34px,4.4vw,60px)] font-light leading-[.95] tracking-[-.045em] text-display-light">{ev.title}</h2>
@@ -29,11 +32,9 @@ function UpcomingCard({ ev }) {
             {ev.venue}
           </p>
         )}
-        <p className="mt-3.5 max-w-[560px] text-muted">{ev.description}</p>
+        <p className="mt-3.5 max-w-[560px] whitespace-pre-line text-muted">{ev.description}</p>
         <div className="mt-auto pt-7">
-          <Button href={ev.registerUrl || '#'}>
-            Register <ArrowUpRight aria-hidden="true" />
-          </Button>
+          <RegisterButton url={ev.registerUrl} />
         </div>
       </div>
     </GlassCard>
@@ -67,7 +68,15 @@ function PastCard({ ev }) {
 export default function Events() {
   const { hash } = useLocation();
   const [tab, setTab] = useState(hash === '#past' ? 'past' : 'upcoming');
-  useEffect(() => { if (hash === '#past') setTab('past'); }, [hash]);
+  useEffect(() => {
+    if (hash === '#past') { setTab('past'); return undefined; }
+    // A link like /events#idea-quest opens Upcoming and scrolls to that event's card
+    const el = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!el) return undefined;
+    setTab('upcoming');
+    const t = setTimeout(() => el.scrollIntoView({ block: 'start' }), 60);
+    return () => clearTimeout(t);
+  }, [hash]);
 
   return (
     <>
