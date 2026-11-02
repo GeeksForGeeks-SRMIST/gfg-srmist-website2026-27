@@ -516,8 +516,8 @@ export default function Hero() {
           <div className="hm-hero__cards">
             {ev?.title && (
               <div className="hm-hero__next" ref={nextRef}>
-                <p className="hm-mini-label hm-a" style={{ '--i': 2 }}>// Next event</p>
-                <SmartLink to={ev.link || '/events'} className="hm-next hm-a" style={{ '--i': 2 }} aria-label={`Next event: ${ev.title}, ${ev.date}`}>
+                <p className="hm-mini-label hm-a" style={{ '--i': 2 }}>// Upcoming event</p>
+                <SmartLink to={ev.link || '/events'} className="hm-next hm-a" style={{ '--i': 2 }} aria-label={`Upcoming event: ${ev.title}, ${ev.date}`}>
                   <span className="hm-next__thumb"><Media src={ev.image} alt="" label=" " /></span>
                   <span className="hm-next__arrow" aria-hidden="true"><ArrowUpRight /></span>
                   <span className="hm-next__meta">

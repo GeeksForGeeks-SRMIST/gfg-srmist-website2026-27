@@ -992,7 +992,7 @@
     position: absolute;
     z-index: 2;
     /* the layout starts at the robot's feet; lift the card up to chest height, on the right of the robot */
-    top: calc(var(--hm-robot-h) * -.3 - 64px);
+    top: calc(var(--hm-robot-h) * -.22 - 64px);
     right: max(12px, calc(50% - var(--hm-robot-w) / 2 + 12px));
     justify-items: end;
     gap: 6px;
